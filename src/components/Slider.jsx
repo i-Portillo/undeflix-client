@@ -109,7 +109,6 @@ export default function Slider(props) {
         res = await getMediasByGenre(category);
       }
       const data = res.data;
-      console.log(res.data);
       setMediaData(data);
     }
 
@@ -144,9 +143,9 @@ export default function Slider(props) {
   // Change display of left slider control when the slider is at the start.
   useEffect(() => {
     atStart ?
-      leftControl?.current.classList.add('hidden')
+      leftControl?.current?.classList.add('hidden')
       :
-      leftControl?.current.classList.remove('hidden')
+      leftControl?.current?.classList.remove('hidden')
   }, [atStart]);
 
   // Change display of right slider control when the slider is at the end.

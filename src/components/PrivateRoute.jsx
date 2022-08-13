@@ -12,10 +12,8 @@ const PrivateRoute = ({ role, children }) => {
     const isLoggedIn = async () => {
       try {
         const res = await checkAuth();
-        console.log('auth:', res);
         if (res.status === 200) {
-          console.log('Logged', res);
-          if (res.data.user.role === 'admin' || res.data.user.role === role)
+          if (role === 'user' || res.data.user.role === 'admin' || res.data.user.role === role)
           setLetIn(true);
         }
         setLoading(false);

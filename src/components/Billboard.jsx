@@ -30,7 +30,6 @@ export default function Billboard({ mode }) {
 
   useEffect( () => {
 
-    console.log('mode:', mode)
     const sliderList = [];
 
     sliderList.push( <Slider key='myList' data='myList' mode={mode}/> );
