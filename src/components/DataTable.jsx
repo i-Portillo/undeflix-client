@@ -1,9 +1,9 @@
-import { Box, Button, Modal, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow, TableSortLabel, TextField, Toolbar, Typography } from '@mui/material'
+import { Box, Button, InputBase, Modal, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow, TableSortLabel, TextField, Toolbar, Typography } from '@mui/material'
 import React, { useState } from 'react'
-import { Edit, Delete, Visibility } from '@mui/icons-material';
+import { Edit, Delete, Visibility, Search } from '@mui/icons-material';
 import { useEffect } from 'react';
 
-export default function DataTable({ title, headers, data, createClick, rowClick }) {
+export default function DataTable({ title, headers, data, createClick, rowClick, role }) {
 
   const [page, setPage] = useState(0);
   const [filter, setFilter] = useState('');
@@ -60,8 +60,29 @@ export default function DataTable({ title, headers, data, createClick, rowClick 
       <Paper sx={{ width: '100%', minHeight: '486px' }}>
         <Toolbar >
           <Typography variant='h4'>{title}</Typography>
-          <Button color='secondary' onClick={createClick} >Add</Button>
-          <TextField onChange={handleFilter}/>
+          <Box display='flex' alignItems={'center'} justifyContent={'center'} style={{ borderRadius: '10px', width: '220px', height: '40px', marginLeft: '48px' }} >
+            <Box>
+              <InputBase
+                id='search-bar'
+                sx={{
+                  backgroundColor: 'primary.dark',
+                  flex: 1,
+                  padding: '4px',
+                  pl: '12px',
+                  borderRadius: '10px',
+                  color: 'secondary.dark'
+                }}
+                endAdornment={<Search />}
+                onChange={handleFilter}
+              />
+            </Box>
+          </Box>
+          {
+            (role === 'admin') ?
+              <Button color='secondary' variant='contained' onClick={createClick} sx={{ marginLeft: '48px', width: '80px'}} >Create</Button>
+            :
+              <></>
+          }
         </Toolbar>
         <TableContainer >
           <Table

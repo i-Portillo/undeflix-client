@@ -66,7 +66,7 @@ function UserDashboard(props) {
 
   return (
     <>
-      <DataTable title={'Users'} headers={headers} data={userData} createClick={handleCreateClick} rowClick={handleRowClick} />
+      <DataTable title={'Users'} headers={headers} data={userData} createClick={handleCreateClick} rowClick={handleRowClick} role={props.role} />
       <Modal open={openDetails} onClose={handleDetailsClose} >
         <Box>
           <UsersModal data={modalData} onClose={handleDetailsClose} role={props.role} />
@@ -74,7 +74,7 @@ function UserDashboard(props) {
       </Modal>
       <Modal open={openCreate} onClose={handleCreateClose} >
         <Box>
-          <UserCreateModal />
+          <UserCreateModal onClose={handleCreateClose} />
         </Box>
       </Modal>
     </>
