@@ -39,7 +39,6 @@ export default function UsersModal(props) {
   }
 
   const handleCancelEdit = () => {
-    console.log('Formdata:', formData, 'Original:', originalData)
     setFormData(originalData);
     setIsEditing(false);
   }
