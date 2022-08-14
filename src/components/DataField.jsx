@@ -1,5 +1,6 @@
 import { Grid, MenuItem, Select, TextField, Typography } from '@mui/material'
 import React from 'react'
+import { useState } from 'react'
 
 export default function DataField({ name, label, type, selectValues, value, isEditing=false, onChange, children }) {
 
@@ -14,6 +15,8 @@ export default function DataField({ name, label, type, selectValues, value, isEd
       }
     }
   }
+
+  const [genres, setGenres] = useState(value);
 
   const field = () => {
     switch(type) {
@@ -35,6 +38,20 @@ export default function DataField({ name, label, type, selectValues, value, isEd
             name={name}
             value={value}
             type='password'
+            disabled= {!isEditing}
+            sx={ style.textField }
+            InputProps={{ disableUnderline: (!isEditing), autoComplete: 'new-password' }}
+            variant='standard'
+            onChange={onChange}
+          />
+        )
+      case 'textArea':
+        return (
+          <TextField
+            name={name}
+            value={value}
+            multiline
+            rows={4}
             disabled= {!isEditing}
             sx={ style.textField }
             InputProps={{ disableUnderline: (!isEditing), autoComplete: 'new-password' }}
@@ -64,6 +81,57 @@ export default function DataField({ name, label, type, selectValues, value, isEd
               selectValues.map( selectValue => {
                 return <MenuItem key={selectValue} value={selectValue}>{selectValue}</MenuItem>
               })
+            }
+          </Select>
+        )
+      case 'multipleSelect':
+        const handleChange = (event) => {
+          const {
+            target: { value },
+          } = event;
+          setGenres(
+            typeof value === 'string' ? value.split(',') : value,
+          )
+        }
+        
+        return (
+          <Select 
+            multiple
+            displayEmpty
+            disabled={!isEditing}
+            value={genres}
+            onChange={handleChange}
+            renderValue={(selected) => {
+              if (selected.length === 0) {
+                return <em>No genres selected</em>;
+              }
+              return selected.join(', ');
+            }}
+            sx={{ 
+              '& .MuiInputBase-input': {
+                color: 'secondary.dark',
+                padding: '4px 8px 4px 8px',
+                minWidth: '420px',
+                maxWidth: '420px',
+              },
+              "& .MuiInputBase-input.Mui-disabled": {
+                WebkitTextFillColor: 'black',
+              },
+            }}
+          >
+            {
+              selectValues.map( genre => (
+                <MenuItem 
+                  key={genre}
+                  value={genre}
+                  sx={{
+                    // backgroundColor: genres.indexOf(genre) === -1 ? '#AA0000' : '#00AA00',
+                    fontWeight: genres.indexOf(genre) === -1 ? 400 : 800,
+                  }}
+                >
+                  {genre}
+                </MenuItem>
+              ))
             }
           </Select>
         )
