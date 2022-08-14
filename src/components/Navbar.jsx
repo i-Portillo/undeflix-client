@@ -66,7 +66,7 @@ export default function Navbar() {
 
   const handleSearch = (e) => {
     e.preventDefault();
-    navigate(`/browse/search/${searchQuery}`);
+    if (searchQuery !== '') navigate(`/browse/search/${searchQuery}`);
   }
 
   return (
