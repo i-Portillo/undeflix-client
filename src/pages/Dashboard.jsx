@@ -7,6 +7,7 @@ import DataTable from '../components/DataTable';
 import DataField from '../components/DataField';
 import UsersModal from '../components/UsersModal';
 import UserCreateModal from '../components/UserCreateModal';
+import MediasModal from '../components/MediasModal';
 
 function StatsDashboard() {
 
@@ -84,12 +85,33 @@ function UserDashboard(props) {
 function MediasDashboard() {
 
   const [mediaData, setMediaData] = useState([]);
+  const [openDetails, setOpenDetails] = useState(false);
+  const [openCreate, setOpenCreate] = useState(false);
+  const [modalData, setModalData] = useState(null);
 
   const headers = [
     { id: 'title', label: 'Title' },
     { id: 'type', label: 'Type' },
     { id: 'production', label: 'Production' },
   ]
+
+  const handleCreateClick = () => {
+    setOpenCreate(true);
+  }
+
+  const handleRowClick = (data) => {
+    setModalData(data);
+    setOpenDetails(true);
+  }
+
+  const handleDetailsClose = () => {
+    setModalData(null);
+    setOpenDetails(false);
+  }
+
+  const handleCreateClose = () => {
+    setOpenCreate(false);
+  }
 
   useEffect( () => {
     const getMedias = async () => {
@@ -102,7 +124,14 @@ function MediasDashboard() {
   }, [])
 
   return (
-    <DataTable title='Medias' headers={headers} data={mediaData} />
+    <>
+      <DataTable title='Medias' headers={headers} data={mediaData} rowClick={handleRowClick} />
+      <Modal open={openDetails} onClose={handleDetailsClose} >
+        <Box>
+          <MediasModal data={modalData} onClose={handleDetailsClose} />
+        </Box>
+      </Modal>
+    </>
   );
 }
 
@@ -134,9 +163,7 @@ export default function Dashboard() {
   const displaySystem = () => {
     setDisplayedData('System');
     setLoading(false);
-  };
-
-  
+  };  
 
   const optionList = [
     { text: 'Stats', onClick: displayStats },
