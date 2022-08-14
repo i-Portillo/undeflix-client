@@ -58,31 +58,33 @@ export default function DataTable({ title, headers, data, createClick, rowClick,
   return (
     <Box sx={{ width: '100%' }} >
       <Paper sx={{ width: '100%', minHeight: '486px' }}>
-        <Toolbar >
+        <Toolbar sx={{ display: 'flex', justifyContent: 'space-between' }} >
           <Typography variant='h4'>{title}</Typography>
-          <Box display='flex' alignItems={'center'} justifyContent={'center'} style={{ borderRadius: '10px', width: '220px', height: '40px', marginLeft: '48px' }} >
-            <Box>
-              <InputBase
-                id='search-bar'
-                sx={{
-                  backgroundColor: 'primary.dark',
-                  flex: 1,
-                  padding: '4px',
-                  pl: '12px',
-                  borderRadius: '10px',
-                  color: 'secondary.dark'
-                }}
-                endAdornment={<Search />}
-                onChange={handleFilter}
-              />
+          <Box display='flex' >
+            {
+              (role === 'admin') ?
+                <Button color='secondary' variant='contained' onClick={createClick} sx={{ width: '80px'}} >Create</Button>
+              :
+                <></>
+            }
+            <Box display='flex' alignItems={'center'} justifyContent={'center'} style={{ borderRadius: '10px', width: '220px', height: '40px', marginLeft: '24px' }} >
+              <Box>
+                <InputBase
+                  id='search-bar'
+                  sx={{
+                    backgroundColor: 'primary.dark',
+                    flex: 1,
+                    padding: '4px',
+                    pl: '12px',
+                    borderRadius: '10px',
+                    color: 'secondary.dark'
+                  }}
+                  endAdornment={<Search />}
+                  onChange={handleFilter}
+                />
+              </Box>
             </Box>
           </Box>
-          {
-            (role === 'admin') ?
-              <Button color='secondary' variant='contained' onClick={createClick} sx={{ marginLeft: '48px', width: '80px'}} >Create</Button>
-            :
-              <></>
-          }
         </Toolbar>
         <TableContainer >
           <Table
