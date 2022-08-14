@@ -11,12 +11,9 @@ import ThumbDownIcon from '@mui/icons-material/ThumbDown';
 export default function UsersModal(props) {
 
   const data = props.data;
-  const mode = props.mode;
   const role = props.role;
 
-  console.log('role', role);
-
-  const [isEditing, setIsEditing] = useState((mode === 'create'));
+  const [isEditing, setIsEditing] = useState(false);
   const [reviewsData, setReviewsData] = useState(null);
   const [viewLogsData, setViewLogsData] = useState(null);
   const [originalData, setOriginalData] = useState(data);
