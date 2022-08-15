@@ -422,7 +422,7 @@ export default function Card(props) {
                 sx={{
                   position: 'absolute',
                   backgroundColor: 'secondary.main',
-                  width: 50,
+                  width: 43,
                   height: 40,
                   top: 230,
                   right: -36,
