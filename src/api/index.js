@@ -44,6 +44,8 @@ export const putMediaInList = (mediaId) => API.put(`/data/media/${mediaId}/list`
 
 export const deleteMediaFromList = (mediaId) => API.delete(`/data/media/${mediaId}/list`);
 
+export const putMediaData = (mediaId, formData) => API.put(`/data/media`, { mediaId: mediaId, data: formData });
+
 export const getUser = () => API.get('/data/user');
 
 export const postUser = (formData) => API.post('/data/user', { data: formData });

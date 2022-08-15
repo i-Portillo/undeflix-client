@@ -3,7 +3,7 @@ import React from 'react'
 import { useEffect } from 'react'
 import { useState } from 'react'
 import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from 'recharts'
-import { deleteUser, getGenres, getUserReviews, getUserViewLogs, putUserData } from '../api'
+import { deleteUser, getGenres, getUserReviews, getUserViewLogs, putMediaData, putUserData } from '../api'
 import DataField from './DataField'
 import ThumbUpIcon from '@mui/icons-material/ThumbUp';
 import ThumbDownIcon from '@mui/icons-material/ThumbDown';
@@ -20,8 +20,8 @@ export default function UsersModal(props) {
   const [selectedSeason, setSelectedSeason] = useState(0);
 
   const handleDelete = async () => {
-    await deleteUser(data._id);
-    console.log('deleted user');
+    // await deleteUser(data._id);
+    // console.log('deleted user');
     // TODO: Remove from table
     props.onClose();
   }
@@ -42,8 +42,9 @@ export default function UsersModal(props) {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+    console.log(formData);
     setIsEditing(false);
-    // await putUserData(data._id, formData);
+    await putMediaData(data._id, formData);
     // if (formData['name'] !== originalData['name']) {
     //   data['name'] = formData['name'];
     // }
@@ -60,24 +61,36 @@ export default function UsersModal(props) {
   }
 
   const handleSeasonClick = (index) => {
-    console.log('Season selected', index)
     setSelectedSeason(index);
   }
 
   const handleDeleteSeason = (index) => {
-
+    if (index <= selectedSeason) setSelectedSeason( prev => prev - 1 )
+    const mediaSrc = JSON.parse(JSON.stringify(formData.media_src));
+    mediaSrc.splice(index, 1);
+    setFormData({ ...formData, media_src: mediaSrc })
   }
 
   const handleAddSeason = () => {
-
+    const mediaSrc = JSON.parse(JSON.stringify(formData.media_src));
+    mediaSrc.push([]);
+    setFormData({ ...formData, media_src: mediaSrc })
   }
 
   const handleDeleteEpisode = (index) => {
-
+    const mediaSrc = JSON.parse(JSON.stringify(formData.media_src));
+    mediaSrc[selectedSeason].splice(index, 1);
+    setFormData({ ...formData, media_src: mediaSrc })
   }
 
   const handleAddEpisode = () => {
-
+    const newEpisode = {
+      title: '',
+      src: '',
+    }
+    const mediaSrc = JSON.parse(JSON.stringify(formData.media_src));
+    mediaSrc[selectedSeason].push(newEpisode);
+    setFormData({ ...formData, media_src: mediaSrc })
   }
 
   const handleSrcChange = (event, season, episode) => {
@@ -90,9 +103,12 @@ export default function UsersModal(props) {
     const newTitle = formData.media_src;
     newTitle[season][episode].title = event.target.value;
     setFormData({ ...formData, media_src: newTitle });
-    console.log('form', formData.media_src[season][episode].title);
-    console.log('original', originalData.media_src[season][episode].title);
-    console.log('data', data.media_src[season][episode].title);
+  }
+
+  const handleListChange = (event) => {
+    console.log(event.target.value);
+    console.log('split', event.target.value.split(','))
+    setFormData({ ...formData, [event.target.name]: event.target.value.split(',') });
   }
 
   const stringifyDate = (unformattedDate) => {
@@ -109,7 +125,6 @@ export default function UsersModal(props) {
       const res = await getGenres();
       setGenres(res.data.map( genre => genre.name ));
     }
-
     fetchGenres();
   }, [])
 
@@ -154,14 +169,14 @@ export default function UsersModal(props) {
             <DataField name='poster_img' type='custom' label=''>
               <Box component="img" src={formData.poster ?? ''} maxWidth='150px' sx={{ minHeight: '225px' }}/>
             </DataField>
-            <DataField name='genres' label='Genres' selectValues={genres} type='multipleSelect' value={formData ? formData.genres.map( genre => genre.name ) : [] } isEditing={isEditing} onChange={handleOnChange} />
+            <DataField name='genres' type='multipleSelect' label='Genres' selectValues={genres} value={formData ? formData.genres.map( genre => genre.name ) : [] } isEditing={isEditing} onChange={handleOnChange} />
             <DataField name='overview' type='textArea' label='Overview' value={formData ? formData.overview : '' } isEditing={isEditing} onChange={handleOnChange} />
             <DataField name='production' type='text' label='Production' value={formData ? formData.production : '' } isEditing={isEditing} onChange={handleOnChange} />
-            <DataField name='director' type='text' label='Director(s)' value={formData ? formData.director.join(', ') : ''} isEditing={isEditing} onChange={handleOnChange} />
-            <DataField name='cast' type='text' label='Cast' value={formData ? formData.cast.join(', ') : ''} isEditing={isEditing} onChange={handleOnChange} />
+            <DataField name='director' type='text' label='Director(s)' value={formData ? formData.director.join(',') : ''} isEditing={isEditing} onChange={handleListChange} />
+            <DataField name='cast' type='text' label='Cast' value={formData ? formData.cast.join(',') : ''} isEditing={isEditing} onChange={handleListChange} />
             {
               (formData.type === 'Movie') ?
-                <DataField name='media_src' type='text' label='Source' value={formData ? formData.media_src[0][0].src : ''} />
+                <DataField name='media_src' type='text' label='Source' value={formData ? formData.media_src[0][0].src : ''} isEditing={isEditing} onChange={(event) => handleSrcChange(event, 0, 0)} />
               :
                 <DataField name='media_src' type='custom' label='Episodes'>
                   <Box display='flex' >
@@ -170,8 +185,8 @@ export default function UsersModal(props) {
                         formData.media_src.map( (season, index) => {
                           return (
                             <Box display='flex' width='150px' sx={{ justifyContent: 'space-between', alignItems: 'center' }}>
-                              <Typography key={`season.${index + 1}`} onClick={() => handleSeasonClick(index)} >Season {index + 1}</Typography>
-                              <IconButton size='large' color='secondary' onClick={() => handleDeleteSeason(index)}>
+                              <Typography key={`season.${index + 1}`} onClick={() => handleSeasonClick(index)} sx={{ cursor: 'pointer', fontWeight: (index === selectedSeason) ? 600 : 400 }}>Season {index + 1}</Typography>
+                              <IconButton size='large' color='secondary' disabled={!isEditing} onClick={() => handleDeleteSeason(index)}>
                                 <Delete fontSize='small' sx={{  }} />
                               </IconButton>
                               {/* <Button color='secondary' variant='contained' size='small' ><Delete fontSize='small' sx={{ padding: '4px' }} /></Button> */}
@@ -179,14 +194,14 @@ export default function UsersModal(props) {
                           )
                         })
                       }
-                      <Button color='secondary' variant='contained' onClick={handleAddSeason} >Add season</Button>
+                      <Button color='secondary' variant='contained' disabled={!isEditing} onClick={handleAddSeason} >Add season</Button>
                     </Box>
-                    <Box>
+                    <Box sx={{ maxHeight: '600px', overflowY: 'auto', overflowX: 'hidden' , scrollbarWidth: 'thin', paddingRight: '8px' }}>
                       {
-                        formData.media_src[selectedSeason].map( (episode, index) => {
+                        formData.media_src[selectedSeason]?.map( (episode, index) => {
                           return (
                             <>
-                              <Box key={`episode${index + 1}`} display='flex' width='320px' sx={{ justifyContent: 'space-between', alignItems: 'center' }} >
+                              <Box key={`episode${index + 1}`} display='flex' width='300px' sx={{ justifyContent: 'space-between', alignItems: 'center' }} >
                                 <Box>
                                   <TextField
                                     value={episode.title}
@@ -222,17 +237,16 @@ export default function UsersModal(props) {
                                     onChange={(event) => handleSrcChange(event, selectedSeason, index)}
                                   />
                                 </Box>
-                                <IconButton size='large' color='secondary' onClick={() => handleDeleteEpisode(index)}>
+                                <IconButton size='large' color='secondary' disabled={!isEditing} onClick={() => handleDeleteEpisode(index)}>
                                   <Delete fontSize='small' sx={{  }} />
                                 </IconButton>
-                                {/* <Button color='secondary' variant='contained' size='small' ><Delete fontSize='small' sx={{ padding: '4px' }} /></Button> */}
                               </Box>
                               <Divider sx={{ width: '100%' }} />
                             </>
                           )
                         })
                       }
-                      <Button color='secondary' variant='contained' onClick={handleAddEpisode} >Add episode</Button>
+                      <Button color='secondary' variant='contained' disabled={!isEditing} onClick={handleAddEpisode} >Add episode</Button>
                     </Box>
                   </Box>
                 </DataField>
