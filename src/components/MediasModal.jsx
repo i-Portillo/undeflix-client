@@ -3,7 +3,7 @@ import React from 'react'
 import { useEffect } from 'react'
 import { useState } from 'react'
 import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from 'recharts'
-import { deleteUser, getGenres, getUserReviews, getUserViewLogs, putMediaData, putUserData } from '../api'
+import { deleteMedia, deleteUser, getGenres, getUserReviews, getUserViewLogs, putMediaData, putUserData } from '../api'
 import DataField from './DataField'
 import ThumbUpIcon from '@mui/icons-material/ThumbUp';
 import ThumbDownIcon from '@mui/icons-material/ThumbDown';
@@ -20,8 +20,7 @@ export default function UsersModal(props) {
   const [selectedSeason, setSelectedSeason] = useState(0);
 
   const handleDelete = async () => {
-    // await deleteUser(data._id);
-    // console.log('deleted user');
+    await deleteMedia(data._id);
     // TODO: Remove from table
     props.onClose();
   }
@@ -45,18 +44,15 @@ export default function UsersModal(props) {
     console.log(formData);
     setIsEditing(false);
     await putMediaData(data._id, formData);
-    // if (formData['name'] !== originalData['name']) {
-    //   data['name'] = formData['name'];
-    // }
-    // if (formData['family_name'] !== originalData['family_name']) {
-    //   data['family_name'] = formData['family_name'];
-    // }
-    // if (formData['subscription_status'] !== originalData['subscription_status']) {
-    //   data['subscription_status'] = formData['subscription_status'];
-    // }
-    // if (formData['role'] !== originalData['role']) {
-    //   data['role'] = formData['role'];
-    // }
+    if (formData['title'] !== originalData['title']) {
+      data['title'] = formData['title'];
+    }
+    if (formData['type'] !== originalData['type']) {
+      data['type'] = formData['type'];
+    }
+    if (formData['production'] !== originalData['production']) {
+      data['production'] = formData['production'];
+    }
     console.log('Done!');
   }
 
