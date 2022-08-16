@@ -7,7 +7,8 @@ import { deleteMedia, deleteUser, getGenres, getUserReviews, getUserViewLogs, pu
 import DataField from './DataField'
 import ThumbUpIcon from '@mui/icons-material/ThumbUp';
 import ThumbDownIcon from '@mui/icons-material/ThumbDown';
-import { Delete } from '@mui/icons-material'
+import { Delete } from '@mui/icons-material';
+import DatePicker from 'react-date-picker';
 
 export default function UsersModal(props) {
 
@@ -22,6 +23,7 @@ export default function UsersModal(props) {
   const handleDelete = async () => {
     await deleteMedia(data._id);
     // TODO: Remove from table
+    props.data = null;
     props.onClose();
   }
 
@@ -53,6 +55,7 @@ export default function UsersModal(props) {
     if (formData['production'] !== originalData['production']) {
       data['production'] = formData['production'];
     }
+    data['media_src'] = formData['media_src'];
     console.log('Done!');
   }
 
@@ -107,6 +110,14 @@ export default function UsersModal(props) {
     setFormData({ ...formData, [event.target.name]: event.target.value.split(',') });
   }
 
+  const handleGenreChange = (value) => {
+    // const selectedGenres = value.map( genre => ({ name: genre }) );
+    const selectedGenres = value.map( selectedGenre => {
+      return genres.find( genre => genre.name === selectedGenre )
+    } );
+    setFormData({ ...formData, genres: selectedGenres });
+  }
+
   const stringifyDate = (unformattedDate) => {
     const date = new Date(unformattedDate);
     return `${date.getDate().toLocaleString('en-US', {minimumIntegerDigits: 2, useGrouping:false})}/` + 
@@ -116,11 +127,18 @@ export default function UsersModal(props) {
     `${date.getMinutes().toLocaleString('en-US', {minimumIntegerDigits: 2, useGrouping:false})}`;
   }
 
+  const handleDateChange = (date, fieldName) => {
+    setFormData({ ...formData, [fieldName]: date })
+  }
+
   useEffect( () => {
     const fetchGenres = async () => {
       const res = await getGenres();
-      setGenres(res.data.map( genre => genre.name ));
+      // setGenres(res.data.map( genre => genre.name ));
+      const genres = res.data;
+      setGenres(genres);
     }
+
     fetchGenres();
   }, [])
 
@@ -159,30 +177,37 @@ export default function UsersModal(props) {
           <Grid container spacing={1}>
 
             <DataField name='title' type='text' label='Title' value={formData ? formData.title : '' } isEditing={isEditing} onChange={handleOnChange} />
-            <DataField name='release_date' type='text' label='Released' value={formData ? stringifyDate(formData.release_date) : '' } isEditing={isEditing} onChange={handleOnChange} />
+            {/* <DataField name='release_date' type='text' label='Released' value={formData ? stringifyDate(formData.release_date) : '' } isEditing={isEditing} onChange={handleDateChange} /> */}
+            <DataField name='release_date' type='custom' label='Released'>
+              <DatePicker value={new Date(formData.release_date)} disabled={!isEditing} onChange={(date) => handleDateChange(date, 'release_date')} />
+            </DataField>
             <DataField name='type' type='select' selectValues={['Movie', 'Show']} label='Type' value={formData ? formData.type : '' } isEditing={isEditing} onChange={handleOnChange} />
             <DataField name='poster' type='text' label='Poster' value={formData ? formData.poster : ''}  isEditing={isEditing} onChange={handleOnChange} />
             <DataField name='poster_img' type='custom' label=''>
               <Box component="img" src={formData.poster ?? ''} maxWidth='150px' sx={{ minHeight: '225px' }}/>
             </DataField>
-            <DataField name='genres' type='multipleSelect' label='Genres' selectValues={genres} value={formData ? formData.genres.map( genre => genre.name ) : [] } isEditing={isEditing} onChange={handleOnChange} />
+            <DataField name='genres' type='multipleSelect' label='Genres' selectValues={genres.map( genre => genre.name )} value={formData ? formData.genres.map( genre => genre.name ) : [] } isEditing={isEditing} onChange={handleGenreChange} />
             <DataField name='overview' type='textArea' label='Overview' value={formData ? formData.overview : '' } isEditing={isEditing} onChange={handleOnChange} />
             <DataField name='production' type='text' label='Production' value={formData ? formData.production : '' } isEditing={isEditing} onChange={handleOnChange} />
             <DataField name='director' type='text' label='Director(s)' value={formData ? formData.director.join(',') : ''} isEditing={isEditing} onChange={handleListChange} />
             <DataField name='cast' type='text' label='Cast' value={formData ? formData.cast.join(',') : ''} isEditing={isEditing} onChange={handleListChange} />
+            {/* <DataField name='updated' type='text' label='Last updated' value={formData ? stringifyDate(formData.updated) : '' } isEditing={false} onChange={(date) => handleDateChange(date, 'updated')} /> */}
+            <DataField name='updated' type='custom' label='Released'>
+              <DatePicker value={new Date(formData.updated)} disabled={!isEditing} onChange={(date) => handleDateChange(date, 'updated')} />
+            </DataField>
             {
               (formData.type === 'Movie') ?
                 <DataField name='media_src' type='text' label='Source' value={formData ? formData.media_src[0][0].src : ''} isEditing={isEditing} onChange={(event) => handleSrcChange(event, 0, 0)} />
               :
                 <DataField name='media_src' type='custom' label='Episodes'>
                   <Box display='flex' >
-                    <Box>
+                    <Box sx={{ maxHeight: '600px', overflowY: 'auto', overflowX: 'hidden' , scrollbarWidth: 'thin', marginRight: '8px' }}>
                       {
                         formData.media_src.map( (season, index) => {
                           return (
                             <Box display='flex' width='150px' sx={{ justifyContent: 'space-between', alignItems: 'center' }}>
                               <Typography key={`season.${index + 1}`} onClick={() => handleSeasonClick(index)} sx={{ cursor: 'pointer', fontWeight: (index === selectedSeason) ? 600 : 400 }}>Season {index + 1}</Typography>
-                              <IconButton size='large' color='secondary' disabled={!isEditing} onClick={() => handleDeleteSeason(index)}>
+                              <IconButton size='large' color='secondary' disabled={formData.media_src.length === 1 || !isEditing} onClick={() => handleDeleteSeason(index)}>
                                 <Delete fontSize='small' sx={{  }} />
                               </IconButton>
                               {/* <Button color='secondary' variant='contained' size='small' ><Delete fontSize='small' sx={{ padding: '4px' }} /></Button> */}
@@ -233,7 +258,7 @@ export default function UsersModal(props) {
                                     onChange={(event) => handleSrcChange(event, selectedSeason, index)}
                                   />
                                 </Box>
-                                <IconButton size='large' color='secondary' disabled={!isEditing} onClick={() => handleDeleteEpisode(index)}>
+                                <IconButton size='large' color='secondary' disabled={formData.media_src[selectedSeason].length === 1 || !isEditing} onClick={() => handleDeleteEpisode(index)}>
                                   <Delete fontSize='small' sx={{  }} />
                                 </IconButton>
                               </Box>
@@ -247,7 +272,6 @@ export default function UsersModal(props) {
                   </Box>
                 </DataField>
             }
-            <DataField name='updated' type='text' label='Last updated' value={formData ? stringifyDate(formData.updated) : '' } isEditing={false} onChange={handleOnChange} />
 
             <Divider sx={{ width: '100%' }}/>
 
