@@ -1,5 +1,6 @@
 import { Grid, MenuItem, Select, TextField, Typography } from '@mui/material'
 import React from 'react'
+import { useEffect } from 'react';
 import { useState } from 'react'
 
 export default function DataField({ name, label, type, selectValues, value, isEditing=false, onChange, children }) {
@@ -16,7 +17,7 @@ export default function DataField({ name, label, type, selectValues, value, isEd
     }
   }
 
-  const [genres, setGenres] = useState(value);
+  const [selectedGenres, setSelectedGenres] = useState(value);
 
   const field = () => {
     switch(type) {
@@ -89,9 +90,10 @@ export default function DataField({ name, label, type, selectValues, value, isEd
           const {
             target: { value },
           } = event;
-          setGenres(
-            typeof value === 'string' ? value.split(',') : value,
+          setSelectedGenres(
+            typeof value === 'string' ? value.split(', ') : value,
           )
+          onChange(value);
         }
         
         return (
@@ -99,7 +101,7 @@ export default function DataField({ name, label, type, selectValues, value, isEd
             multiple
             displayEmpty
             disabled={!isEditing}
-            value={genres}
+            value={selectedGenres}
             onChange={handleChange}
             renderValue={(selected) => {
               if (selected.length === 0) {
@@ -125,8 +127,7 @@ export default function DataField({ name, label, type, selectValues, value, isEd
                   key={genre}
                   value={genre}
                   sx={{
-                    // backgroundColor: genres.indexOf(genre) === -1 ? '#AA0000' : '#00AA00',
-                    fontWeight: genres.indexOf(genre) === -1 ? 400 : 800,
+                    fontWeight: selectedGenres.indexOf(genre) === -1 ? 400 : 800,
                   }}
                 >
                   {genre}
