@@ -8,6 +8,7 @@ import DataField from '../components/DataField';
 import UsersModal from '../components/UsersModal';
 import UserCreateModal from '../components/UserCreateModal';
 import MediasModal from '../components/MediasModal';
+import MediaCreateModal from '../components/MediaCreateModel';
 
 function StatsDashboard() {
 
@@ -125,10 +126,15 @@ function MediasDashboard() {
 
   return (
     <>
-      <DataTable title='Medias' headers={headers} data={mediaData} rowClick={handleRowClick} />
+      <DataTable title='Medias' headers={headers} data={mediaData} createClick={handleCreateClick} rowClick={handleRowClick} role={'admin'} />
       <Modal open={openDetails} onClose={handleDetailsClose} >
         <Box>
           <MediasModal data={modalData} onClose={handleDetailsClose} />
+        </Box>
+      </Modal>
+      <Modal open={openCreate} onClose={handleCreateClose} >
+        <Box>
+          <MediaCreateModal onClose={handleCreateClose} />
         </Box>
       </Modal>
     </>
