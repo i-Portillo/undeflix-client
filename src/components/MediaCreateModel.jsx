@@ -33,8 +33,7 @@ export default function MediaCreateModal(props) {
   const handleCreate = async () => {
     // TODO: Validate formData
     await postMedia(formData);
-    // console.log(formData);
-    // props.onClose();
+    props.onClose();
   }
 
   const handleCancel = () => {
@@ -54,7 +53,7 @@ export default function MediaCreateModal(props) {
 
   const handleAddSeason = () => {
     const mediaSrc = JSON.parse(JSON.stringify(formData.media_src));
-    mediaSrc.push([]);
+    mediaSrc.push([ { title: '', src: '' } ]);
     setFormData({ ...formData, media_src: mediaSrc })
   }
 
@@ -65,8 +64,6 @@ export default function MediaCreateModal(props) {
   }
 
   const handleListChange = (event) => {
-    console.log(event.target.value);
-    console.log('split', event.target.value.split(','))
     setFormData({ ...formData, [event.target.name]: event.target.value.split(',') });
   }
 
@@ -94,8 +91,6 @@ export default function MediaCreateModal(props) {
   }
 
   const handleGenreChange = (value) => {
-    // const genres = value.map( genre => ({ name: genre }) );
-    console.log(genres);
 
     const selectedGenres = value.map( selectedGenre => {
       return genres.find( genre => (genre.name === selectedGenre) )
@@ -173,9 +168,9 @@ export default function MediaCreateModal(props) {
                       {
                         formData.media_src.map( (season, index) => {
                           return (
-                            <Box display='flex' width='150px' sx={{ justifyContent: 'space-between', alignItems: 'center' }}>
-                              <Typography key={`season.${index + 1}`} onClick={() => handleSeasonClick(index)} sx={{ cursor: 'pointer', fontWeight: (index === selectedSeason) ? 600 : 400 }}>Season {index + 1}</Typography>
-                              <IconButton size='large' color='secondary' disabled={ formData.media_src[selectedSeason].length === 1 || false} onClick={() => handleDeleteSeason(index)}>
+                            <Box key={`season.${index + 1}`} display='flex' width='150px' sx={{ justifyContent: 'space-between', alignItems: 'center' }}>
+                              <Typography onClick={() => handleSeasonClick(index)} sx={{ cursor: 'pointer', fontWeight: (index === selectedSeason) ? 600 : 400 }}>Season {index + 1}</Typography>
+                              <IconButton size='large' color='secondary' disabled={ formData.media_src.length === 1 || false} onClick={() => handleDeleteSeason(index)}>
                                 <Delete fontSize='small' sx={{  }} />
                               </IconButton>
                               {/* <Button color='secondary' variant='contained' size='small' ><Delete fontSize='small' sx={{ padding: '4px' }} /></Button> */}
@@ -189,12 +184,15 @@ export default function MediaCreateModal(props) {
                       {
                         formData.media_src[selectedSeason]?.map( (episode, index) => {
                           return (
-                            <>
-                              <Box key={`episode${index + 1}`} display='flex' width='300px' sx={{ justifyContent: 'space-between', alignItems: 'center' }} >
+                            <Box key={`episode${index + 1}`}>
+                              <Box display='flex' width='300px' sx={{ justifyContent: 'space-between', alignItems: 'center' }} >
                                 <Box>
+                                  <Typography sx={{ fontWeight: 600 }} >{`Episode ${index + 1}`}</Typography>
                                   <TextField
-                                    value={episode.title}
+                                    value={formData.media_src[selectedSeason][index].title}
                                     disabled= {false}
+                                    label= { formData.media_src[selectedSeason][index].title ? ' ' : 'Title'}
+                                    InputLabelProps={{ shrink: false }}
                                     sx={{
                                       width: '100%',
                                       "& .MuiInputBase-input": { // For text color
@@ -209,8 +207,11 @@ export default function MediaCreateModal(props) {
                                     onChange={(event) => handleEpisodeTitleChange(event, selectedSeason, index)}
                                   />
                                   <TextField
-                                    value={episode.src}
+                                    // value={episode.src}
+                                    value={formData.media_src[selectedSeason][index].src}
                                     disabled= {false}
+                                    label= { formData.media_src[selectedSeason][index].src ? ' ' : 'Path to source'}
+                                    InputLabelProps={{ shrink: false }}
                                     sx={{
                                       width: '100%',
                                       "& .MuiInputBase-input": { // For text color
@@ -231,7 +232,7 @@ export default function MediaCreateModal(props) {
                                 </IconButton>
                               </Box>
                               <Divider sx={{ width: '100%' }} />
-                            </>
+                            </Box>
                           )
                         })
                       }
