@@ -21,8 +21,6 @@ export default function UsersModal(props) {
 
   const handleDelete = async () => {
     await deleteUser(data._id);
-    console.log('deleted user');
-    // TODO: Remove from table
     props.onClose();
   }
 
@@ -44,19 +42,6 @@ export default function UsersModal(props) {
     event.preventDefault();
     setIsEditing(false);
     await putUserData(data._id, formData);
-    if (formData['name'] !== originalData['name']) {
-      data['name'] = formData['name'];
-    }
-    if (formData['family_name'] !== originalData['family_name']) {
-      data['family_name'] = formData['family_name'];
-    }
-    if (formData['subscription_status'] !== originalData['subscription_status']) {
-      data['subscription_status'] = formData['subscription_status'];
-    }
-    if (formData['role'] !== originalData['role']) {
-      data['role'] = formData['role'];
-    }
-    console.log('Done!');
   }
 
   useEffect( () => {

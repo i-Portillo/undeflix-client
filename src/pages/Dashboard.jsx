@@ -41,13 +41,21 @@ function UserDashboard(props) {
     setOpenDetails(true);
   }
 
+  const refreshData = async () => {
+    const res = await apiGetUsers();
+    const users = res.data;
+    setUserData(users); 
+  }
+
   const handleDetailsClose = () => {
     setModalData(null);
     setOpenDetails(false);
+    refreshData();
   }
 
   const handleCreateClose = () => {
     setOpenCreate(false);
+    refreshData();
   }
 
   // const rowActions = [
@@ -105,13 +113,21 @@ function MediasDashboard() {
     setOpenDetails(true);
   }
 
+  const refreshData = async () => {
+    const res = await apiGetMedias();
+    const medias = res.data;
+    setMediaData(medias);
+  }
+
   const handleDetailsClose = () => {
     setModalData(null);
     setOpenDetails(false);
+    refreshData();
   }
 
   const handleCreateClose = () => {
     setOpenCreate(false);
+    refreshData();
   }
 
   useEffect( () => {
