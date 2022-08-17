@@ -301,7 +301,7 @@ export default function Card(props) {
           minWidth: '700px',
         }}>
           <Box sx={{ display: 'flex' }}> {/* Modal main content */}
-            <Box component="img" src={mediaData.poster ?? ''} maxWidth='350px' sx={{ borderTopLeftRadius: '10px' }}/>
+            <Box component="img" src={mediaData.poster ?? ''} maxWidth='350px' minWidth='350px' sx={{ borderTopLeftRadius: '10px' }}/>
             <Box sx={{ p: 2, width: '100%'}}>
               <Box sx={{ justifyContent: 'space-around', display: 'flex' }} >
                 <IconButton size='large' color='primary' onClick={handlePlayCurrent}>
