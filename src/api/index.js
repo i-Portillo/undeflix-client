@@ -46,6 +46,8 @@ export const deleteMediaFromList = (mediaId) => API.delete(`/data/media/${mediaI
 
 export const putMediaData = (mediaId, formData) => API.put(`/data/media`, { mediaId: mediaId, data: formData });
 
+export const postMedia = (formData) => API.post(`/data/media`, { data: formData })
+
 export const deleteMedia = (mediaId) => API.delete(`/data/media/${mediaId}`);
 
 export const getUser = () => API.get('/data/user');

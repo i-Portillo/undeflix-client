@@ -1,14 +1,16 @@
 import { Delete } from '@mui/icons-material';
 import { Box, Button, Divider, Grid, IconButton, Paper, TextField, Typography } from '@mui/material'
 import React, { useEffect, useState } from 'react'
-import { getGenres, postUser } from '../api';
+import DatePicker from 'react-date-picker';
+import { getGenres, postMedia } from '../api';
 import DataField from './DataField'
 
 export default function MediaCreateModal(props) {
 
   const clearForm = {
+    media_id: '',
     title: '',
-    release_date: '01/01/1900 00:00',
+    release_date: Date.now(),
     type: 'Movie',
     poster: '',
     genres: [],
@@ -16,7 +18,7 @@ export default function MediaCreateModal(props) {
     production: '',
     director: [],
     cast: [],
-    updated: '01/01/1900 00:00',
+    updated: Date.now(),
     media_src: [[{ title: '', src: '' }]],
   }
 
@@ -30,8 +32,8 @@ export default function MediaCreateModal(props) {
 
   const handleCreate = async () => {
     // TODO: Validate formData
-    // await postUser(formData);
-    console.log(formData);
+    await postMedia(formData);
+    // console.log(formData);
     // props.onClose();
   }
 
@@ -81,6 +83,7 @@ export default function MediaCreateModal(props) {
   const handleSrcChange = (event, season, episode) => {
     const newSrc = formData.media_src;
     newSrc[season][episode].src = event.target.value;
+    if (formData.type === 'Movie') newSrc[season][episode].title = formData.title;
     setFormData({ ...formData, media_src: newSrc });
   }
 
@@ -98,6 +101,10 @@ export default function MediaCreateModal(props) {
       return genres.find( genre => (genre.name === selectedGenre) )
     } );
     setFormData({ ...formData, genres: selectedGenres });
+  }
+
+  const handleDateChange = (date, fieldName) => {
+    setFormData({ ...formData, [fieldName]: new Date(date) })
   }
 
   useEffect( () => {
@@ -135,8 +142,12 @@ export default function MediaCreateModal(props) {
             </Box>
             <Divider sx={{ width: '100%' }}/>
           <Grid container spacing={1}>
+            <DataField name='media_id' type='text' label='Id' value={formData ? formData.media_id : '' } isEditing={true} onChange={handleOnChange} />
             <DataField name='title' type='text' label='Title' value={formData ? formData.title : '' } isEditing={true} onChange={handleOnChange} />
-            <DataField name='release_date' type='text' label='Released' value={formData ? formData.release_date : '' } isEditing={true} onChange={handleOnChange} />
+            {/* <DataField name='release_date' type='text' label='Released' value={formData ? formData.release_date : '' } isEditing={true} onChange={handleOnChange} /> */}
+            <DataField name='release_date' type='custom' label='Released'>
+              <DatePicker value={new Date(formData.release_date)} disabled={false} onChange={(date) => handleDateChange(date, 'release_date')} />
+            </DataField>
             <DataField name='type' type='select' selectValues={['Movie', 'Show']} label='Type' value={formData ? formData.type : '' } isEditing={true} onChange={handleOnChange} />
             <DataField name='poster' type='text' label='Poster' value={formData ? formData.poster : ''}  isEditing={true} onChange={handleOnChange} />
             <DataField name='poster_img' type='custom' label=''>
@@ -147,7 +158,10 @@ export default function MediaCreateModal(props) {
             <DataField name='production' type='text' label='Production' value={formData ? formData.production : '' } isEditing={true} onChange={handleOnChange} />
             <DataField name='director' type='text' label='Director(s)' value={formData ? formData.director.join(',') : ''} isEditing={true} onChange={handleListChange} />
             <DataField name='cast' type='text' label='Cast' value={formData ? formData.cast.join(',') : ''} isEditing={true} onChange={handleListChange} />
-            <DataField name='updated' type='text' label='Last updated' value={formData ? formData.updated : '' } isEditing={true} onChange={handleOnChange} />
+            {/* <DataField name='updated' type='text' label='Last updated' value={formData ? formData.updated : '' } isEditing={true} onChange={handleOnChange} /> */}
+            <DataField name='updated' type='custom' label='Updated'>
+              <DatePicker value={new Date(formData.updated)} disabled={false} onChange={(date) => handleDateChange(date, 'updated')} />
+            </DataField>
 
             {
               (formData.type === 'Movie') ?
