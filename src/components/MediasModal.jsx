@@ -10,7 +10,7 @@ import ThumbDownIcon from '@mui/icons-material/ThumbDown';
 import { Delete } from '@mui/icons-material';
 import DatePicker from 'react-date-picker';
 
-export default function UsersModal(props) {
+export default function MediasModal(props) {
 
   const data = props.data;
 
@@ -22,8 +22,6 @@ export default function UsersModal(props) {
 
   const handleDelete = async () => {
     await deleteMedia(data._id);
-    // TODO: Remove from table
-    props.data = null;
     props.onClose();
   }
 
@@ -43,7 +41,6 @@ export default function UsersModal(props) {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    console.log(formData);
     setIsEditing(false);
     await putMediaData(data._id, formData);
     if (formData['title'] !== originalData['title']) {
@@ -72,7 +69,7 @@ export default function UsersModal(props) {
 
   const handleAddSeason = () => {
     const mediaSrc = JSON.parse(JSON.stringify(formData.media_src));
-    mediaSrc.push([]);
+    mediaSrc.push([ { title: '', src: '' } ]);
     setFormData({ ...formData, media_src: mediaSrc })
   }
 
@@ -105,8 +102,6 @@ export default function UsersModal(props) {
   }
 
   const handleListChange = (event) => {
-    console.log(event.target.value);
-    console.log('split', event.target.value.split(','))
     setFormData({ ...formData, [event.target.name]: event.target.value.split(',') });
   }
 
@@ -205,8 +200,8 @@ export default function UsersModal(props) {
                       {
                         formData.media_src.map( (season, index) => {
                           return (
-                            <Box display='flex' width='150px' sx={{ justifyContent: 'space-between', alignItems: 'center' }}>
-                              <Typography key={`season.${index + 1}`} onClick={() => handleSeasonClick(index)} sx={{ cursor: 'pointer', fontWeight: (index === selectedSeason) ? 600 : 400 }}>Season {index + 1}</Typography>
+                            <Box key={`season.${index + 1}`} display='flex' width='150px' sx={{ justifyContent: 'space-between', alignItems: 'center' }}>
+                              <Typography onClick={() => handleSeasonClick(index)} sx={{ cursor: 'pointer', fontWeight: (index === selectedSeason) ? 600 : 400 }}>Season {index + 1}</Typography>
                               <IconButton size='large' color='secondary' disabled={formData.media_src.length === 1 || !isEditing} onClick={() => handleDeleteSeason(index)}>
                                 <Delete fontSize='small' sx={{  }} />
                               </IconButton>
@@ -221,11 +216,14 @@ export default function UsersModal(props) {
                       {
                         formData.media_src[selectedSeason]?.map( (episode, index) => {
                           return (
-                            <>
-                              <Box key={`episode${index + 1}`} display='flex' width='300px' sx={{ justifyContent: 'space-between', alignItems: 'center' }} >
+                            <Box key={`episode${index + 1}`} >
+                              <Box display='flex' width='300px' sx={{ justifyContent: 'space-between', alignItems: 'center' }} >
                                 <Box>
+                                  <Typography sx={{ fontWeight: 600 }} >{`Episode ${index + 1}`}</Typography>
                                   <TextField
-                                    value={episode.title}
+                                    value={formData.media_src[selectedSeason][index].title}
+                                    label= { formData.media_src[selectedSeason][index].title ? ' ' : 'Title'}
+                                    InputLabelProps={{ shrink: false }}
                                     disabled= {!isEditing}
                                     sx={{
                                       width: '100%',
@@ -241,8 +239,11 @@ export default function UsersModal(props) {
                                     onChange={(event) => handleEpisodeTitleChange(event, selectedSeason, index)}
                                   />
                                   <TextField
-                                    value={episode.src}
+                                    // value={episode.src}
+                                    value={formData.media_src[selectedSeason][index].src}
                                     disabled= {!isEditing}
+                                    label= { formData.media_src[selectedSeason][index].src ? ' ' : 'Path to source'}
+                                    InputLabelProps={{ shrink: false }}
                                     sx={{
                                       width: '100%',
                                       "& .MuiInputBase-input": { // For text color
@@ -263,7 +264,7 @@ export default function UsersModal(props) {
                                 </IconButton>
                               </Box>
                               <Divider sx={{ width: '100%' }} />
-                            </>
+                            </Box>
                           )
                         })
                       }
