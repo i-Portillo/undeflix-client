@@ -8,7 +8,7 @@ import DataField from '../components/DataField';
 import UsersModal from '../components/UsersModal';
 import UserCreateModal from '../components/UserCreateModal';
 import MediasModal from '../components/MediasModal';
-import MediaCreateModal from '../components/MediaCreateModel';
+import MediaCreateModal from '../components/MediaCreateModal';
 
 function StatsDashboard() {
 
