@@ -1,4 +1,4 @@
-import { Box, Button, CircularProgress, Container, Divider, getAccordionDetailsUtilityClass, Grid, Paper, TextField, Typography } from '@mui/material';
+import { Box, CircularProgress, Container, Divider, Paper, Typography } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 
 import OptionList from './OptionList';
@@ -10,50 +10,47 @@ export default function Profile() {
 
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [displayedData, setDisplayedData] = useState(null);
+  const [selectedMenu, setSelectedMenu] = useState('accountDetails');
 
-  let accountDetails = (<AccountDetails userData={data} />)
+  const handleDataChange = () => {
+    const getUserData = async () => {
+      const res = await getUser();
+      setData(res.data);
+    }
 
-  const planInfo = (
-    <Typography>Plan Info</Typography>
-  )
-
-  const userPreference = (
-    <Typography>User Preferences</Typography>
-  )
-
-  const viewLog = (
-    <Typography>View Log</Typography>
-  )
-
-  const displayAccount = () => {
-    setDisplayedData(accountDetails);
+    getUserData();
   }
 
-  const displayPlan = () => {
-    setDisplayedData(planInfo);
-  }
-
-  const displayUserPreference = () => {
-    setDisplayedData(userPreference);
-  }
-
-  const displayViewLog = () => {
-    setDisplayedData(viewLog);
+  const content = () => {
+    switch(selectedMenu) {
+      case 'accountDetails':
+        return <AccountDetails userData={data} onDataChange={handleDataChange} />;
+      case 'planInfo':
+        return <Typography>Plan Info</Typography>
+      case 'userPreferences':
+        return <Typography>User Preferences</Typography>;
+      case 'viewLog':
+        return <Typography>View Log</Typography>;
+      default:
+        return (
+          <Box width='100%' mt={15} display='flex' justifyContent={'center'} alignItems={'center'} >
+            <CircularProgress color="accent" />
+          </Box>
+        )
+    }
   }
   
   const options = [
-    { text: 'Account details', onClick: displayAccount },
-    { text: 'Plan info', onClick: displayPlan },
-    { text: 'User Preferences', onClick: displayUserPreference },
-    { text: 'View Log', onClick: displayViewLog },
+    { text: 'Account details', onClick: () => setSelectedMenu('accountDetails') },
+    { text: 'Plan info', onClick: () => setSelectedMenu('planInfo') },
+    { text: 'User Preferences', onClick: () => setSelectedMenu('userPreferences') },
+    { text: 'View Log', onClick: () => setSelectedMenu('viewLog') },
   ];
 
   useEffect( () => {
     const getUserData = async () => {
       const res = await getUser();
       setData(res.data);
-      console.log(res.data);
     }
 
     getUserData();
@@ -61,7 +58,6 @@ export default function Profile() {
 
   useEffect( () => {
     if(data) {
-      setDisplayedData(accountDetails);
       setLoading(false);
     }
   }, [data])
@@ -83,7 +79,9 @@ export default function Profile() {
               <Box width='100%' mt={15} display='flex' justifyContent={'center'} alignItems={'center'} >
                 <CircularProgress color="accent" />
               </Box>
-              : displayedData }
+              :
+              content()
+            }
           </Box>
         </Box>
       </Paper>
