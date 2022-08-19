@@ -56,6 +56,8 @@ export const postUser = (formData) => API.post('/data/user', { data: formData })
 
 export const putUserData = (user, formData) => API.put(`/data/user`, { user: user, data: formData });
 
+export const putUserPassword = (password) => API.put(`/data/user/password`, { password: password })
+
 export const deleteUser = (user) => API.delete(`/data/user/${user}`);
 
 export const getUserRole = () => API.get('/data/user/role');
