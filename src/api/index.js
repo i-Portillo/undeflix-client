@@ -85,3 +85,7 @@ export const getViewLog = (mediaSrc) => API.get('/data/viewLog', { params: { med
 export const putViewLog = (mediaSrc, progress) => API.put('/data/viewlog', { mediaSrc, progress });
 
 export const getQuery = (searchQuery) => API.get('/data/medias/search/', { params: { searchQuery }});
+
+export const getMediaReviewsData = (mediaId) => API.get(`/data/media/${mediaId}/reviewData`);
+
+export const getListedData = (mediaId) => API.get(`/data/media/${mediaId}/listedData`);

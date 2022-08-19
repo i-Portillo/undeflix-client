@@ -3,7 +3,7 @@ import React from 'react'
 import { useEffect } from 'react'
 import { useState } from 'react'
 import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from 'recharts'
-import { deleteMedia, deleteUser, getGenres, getUserReviews, getUserViewLogs, putMediaData, putUserData } from '../api'
+import { deleteMedia, deleteUser, getGenres, getListedData, getMediaReviewsData, getUserReviews, getUserViewLogs, putMediaData, putUserData } from '../api'
 import DataField from './DataField'
 import ThumbUpIcon from '@mui/icons-material/ThumbUp';
 import ThumbDownIcon from '@mui/icons-material/ThumbDown';
@@ -19,6 +19,8 @@ export default function MediasModal(props) {
   const [formData, setFormData] = useState(JSON.parse(JSON.stringify(data)));
   const [genres, setGenres] = useState([]);
   const [selectedSeason, setSelectedSeason] = useState(0);
+  const [reviewData, setReviewData] = useState({ liked: 0, disliked: 0 })
+  const [listedData, setListedData] = useState({ count: 0 });
 
   const handleDelete = async () => {
     await deleteMedia(data._id);
@@ -129,12 +131,23 @@ export default function MediasModal(props) {
   useEffect( () => {
     const fetchGenres = async () => {
       const res = await getGenres();
-      // setGenres(res.data.map( genre => genre.name ));
       const genres = res.data;
       setGenres(genres);
     }
 
+    const fetchLiked = async () => {
+      const res = await getMediaReviewsData(data._id);
+      setReviewData(res.data);
+    }
+
+    const fetchListed = async () => {
+      const res = await getListedData(data._id);
+      setListedData(res.data);
+    }
+
     fetchGenres();
+    fetchLiked();
+    fetchListed();
   }, [])
 
   return (
@@ -275,6 +288,10 @@ export default function MediasModal(props) {
             }
 
             <Divider sx={{ width: '100%' }}/>
+
+            <DataField name='review_data' type='text' label='Review data' value={`Liked: ${reviewData.liked} / Disliked: ${reviewData.disliked}`} />
+
+            <DataField name='listed_data' type='text' label='Listed data' value={`Currently in ${listedData.count} list(s).`} />
 
           </Grid>
         </Box>
