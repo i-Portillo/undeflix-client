@@ -3,9 +3,22 @@ import { useNavigate } from 'react-router-dom';
 
 import { Paper, Typography, Button, Container, TextField, Grid } from '@mui/material';
 
-import { checkAuth, signIn, signUp } from '../api/index.js';
+import { checkAuth, postUser, signIn, signUp } from '../api/index.js';
 
-const initialFormData = { firstName: '', familyName: '', email: '', password: '', confirmPassword: ''}
+const initialFormData = {
+  email: '',
+  password: '',
+  confirm: '',
+  name: '',
+  family_name: '',
+  // role: 'user',
+  // subscription_status: 'Active',
+  bank_details: '',
+  state: '',
+  city: '',
+  address: '',
+  zip_code: '',
+}
 
 const Auth = () => {
 
@@ -16,8 +29,31 @@ const Auth = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    await signIn(formData);
-    navigate('/catalog');
+    try{
+      if (!isSignup) {
+        await signIn(formData);
+        navigate('/catalog');
+      } else {
+        if (  // TODO: Proper validation
+          formData.email !== '' &&
+          formData.password !== '' &&
+          formData.bank_details !== '' &&
+          formData.password === formData.confirm 
+        ) {
+          formData.role = 'user';
+          formData.subscription_status = 'Active';
+          const res = await postUser(formData);
+          if (res.status === 200) {
+            await signIn(formData);
+            navigate('/catalog');
+          } else {
+            throw new Error(res.data.message);
+          }
+        }
+      }
+    } catch(err) {
+      console.log(err);
+    }
   }
 
   const handleChange = (e) => {
@@ -70,10 +106,10 @@ const Auth = () => {
             { isSignup &&
               <>
                 <Grid item xs={6}>
-                  <TextField fullWidth name="firstName" label="First Name" onChange={handleChange} />
+                  <TextField fullWidth name="name" label="First Name" onChange={handleChange} />
                 </Grid>
                 <Grid item xs={6}>
-                  <TextField fullWidth name="familyName" label="Family Name" onChange={handleChange} />
+                  <TextField fullWidth name="family_name" label="Family Name" onChange={handleChange} />
                 </Grid>
               </>
             }
@@ -84,9 +120,26 @@ const Auth = () => {
               <TextField fullWidth name="password" label="Password" onChange={handleChange} type="password" />
             </Grid>
             { isSignup &&
-              <Grid item xs={12}>
-                <TextField fullWidth name="confirmPassword" label="Repeat Password" onChange={handleChange} type="password" />
-              </Grid>
+              <>
+                <Grid item xs={12}>
+                  <TextField fullWidth name="confirm" label="Repeat Password" onChange={handleChange} type="password" />
+                </Grid>
+                <Grid item xs={12}>
+                  <TextField fullWidth name="bank_details" label="Bank Details" onChange={handleChange} type="text" />
+                </Grid>
+                <Grid item xs={12}>
+                  <TextField fullWidth name="state" label="State" onChange={handleChange} type="text" />
+                </Grid>
+                <Grid item xs={12}>
+                  <TextField fullWidth name="city" label="City" onChange={handleChange} type="text" />
+                </Grid>
+                <Grid item xs={12}>
+                  <TextField fullWidth name="address" label="Address" onChange={handleChange} type="text" />
+                </Grid>
+                <Grid item xs={12}>
+                  <TextField fullWidth name="zip_code" label="Zip Code" onChange={handleChange} type="text" />
+                </Grid>
+              </>
             }
           </Grid>
           <Button type="submit" fullWidth variant="contained" sx={style.submit}>
