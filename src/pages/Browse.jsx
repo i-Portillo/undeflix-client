@@ -4,7 +4,7 @@ import { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 
 import { getMediasByGenre, getQuery, getUserList } from '../api';
-import CardList from './CardList';
+import CardList from '../components/CardList';
 
 const Browse = ({ category }) => {
 

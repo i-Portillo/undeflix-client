@@ -1,8 +1,8 @@
 import React from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Auth from './pages/Auth';
-import Billboard from './components/Billboard';
-import Browse from './components/Browse';
+import Billboard from './pages/Billboard';
+import Browse from './pages/Browse';
 import Navbar from './components/Navbar';
 import PrivateRoute from './components/PrivateRoute';
 import Profile from './pages/Profile';

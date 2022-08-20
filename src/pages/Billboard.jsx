@@ -2,7 +2,7 @@ import { Box } from '@mui/material';
 import { React, useState, useEffect } from 'react';
 import { getUserGenreAffinity } from '../api';
 
-import Slider from './Slider';
+import Slider from '../components/Slider';
 
 export default function Billboard({ mode }) {
 
