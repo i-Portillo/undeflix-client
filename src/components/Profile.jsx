@@ -5,6 +5,8 @@ import OptionList from './OptionList';
 
 import { getUser } from '../api/index';
 import AccountDetails from './AccountDetails';
+import UserReviews from './UserReviews';
+import UserViewLogs from './UserViewLogs';
 
 export default function Profile() {
 
@@ -25,12 +27,12 @@ export default function Profile() {
     switch(selectedMenu) {
       case 'accountDetails':
         return <AccountDetails userData={data} onDataChange={handleDataChange} />;
-      case 'planInfo':
-        return <Typography>Plan Info</Typography>
-      case 'userPreferences':
-        return <Typography>User Preferences</Typography>;
+      // case 'planInfo':
+      //   return <Typography>Plan Info</Typography>
+      case 'reviews':
+        return <UserReviews userData={{ genres: data.genre_affinity, reviews: data.media_reviews }} />;
       case 'viewLog':
-        return <Typography>View Log</Typography>;
+        return <UserViewLogs userData={{ viewLogs: data.view_logs }}  />
       default:
         return (
           <Box width='100%' mt={15} display='flex' justifyContent={'center'} alignItems={'center'} >
@@ -42,8 +44,8 @@ export default function Profile() {
   
   const options = [
     { text: 'Account details', onClick: () => setSelectedMenu('accountDetails') },
-    { text: 'Plan info', onClick: () => setSelectedMenu('planInfo') },
-    { text: 'User Preferences', onClick: () => setSelectedMenu('userPreferences') },
+    // { text: 'Plan info', onClick: () => setSelectedMenu('planInfo') },  // TODO: Expand with facturation module
+    { text: 'Reviews', onClick: () => setSelectedMenu('reviews') },
     { text: 'View Log', onClick: () => setSelectedMenu('viewLog') },
   ];
 
