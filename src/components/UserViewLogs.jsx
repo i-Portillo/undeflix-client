@@ -17,12 +17,20 @@ export default function UserViewLogs({ userData }) {
                   {
                     userData.viewLogs.map (viewLog => {
                       const date = new Date(viewLog.date);
-                      const formattedDate = `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()} ${date.getHours()}:${date.getMinutes()}`;
+                      const formattedDate = `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()} ${date.getHours().toLocaleString('en-US', {minimumIntegerDigits: 2, useGrouping:false})}:${date.getMinutes().toLocaleString('en-US', {minimumIntegerDigits: 2, useGrouping:false})}`;
                       return (
                         <ListItem key={`viewLog.${viewLog._id}`} sx={{ justifyContent: 'space-between', }} >
-                          <Typography variant='body2' noWrap sx={{ width: '330px'}} >{viewLog.media_src.title}</Typography>
-                          <Typography variant='body2' >{viewLog.progress}%</Typography>
-                          <Typography variant='body2' >{formattedDate}</Typography>
+                          <Box sx={{ width: '330px'}} >
+                            <Typography variant='body'>{`${viewLog.media_src.media.title}`}</Typography>
+                            {
+                              (viewLog.media_src.media.type === 'Show') ?
+                                <Typography variant='body2' noWrap >{`${viewLog.media_src.title}`}</Typography>
+                              :
+                                <></>
+                            }
+                          </Box>
+                          <Typography variant='body' >{viewLog.progress}%</Typography>
+                          <Typography variant='body' >{formattedDate}</Typography>
                         </ListItem>
                       )
                     })
