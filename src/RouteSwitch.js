@@ -1,11 +1,11 @@
 import React from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import Auth from './components/Auth';
+import Auth from './pages/Auth';
 import Billboard from './components/Billboard';
 import Browse from './components/Browse';
 import Navbar from './components/Navbar';
 import PrivateRoute from './components/PrivateRoute';
-import Profile from './components/Profile';
+import Profile from './pages/Profile';
 import Dashboard from './pages/Dashboard';
 import NotFound from './pages/NotFound';
 import Watch from './pages/Watch';

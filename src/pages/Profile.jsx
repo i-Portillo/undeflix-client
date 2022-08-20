@@ -1,12 +1,12 @@
 import { Box, CircularProgress, Container, Divider, Paper, Typography } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 
-import OptionList from './OptionList';
+import OptionList from '../components/OptionList';
 
 import { getUser } from '../api/index';
-import AccountDetails from './AccountDetails';
-import UserReviews from './UserReviews';
-import UserViewLogs from './UserViewLogs';
+import AccountDetails from '../components/AccountDetails';
+import UserReviews from '../components/UserReviews';
+import UserViewLogs from '../components/UserViewLogs';
 
 export default function Profile() {
 

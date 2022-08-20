@@ -17,7 +17,6 @@ const Auth = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     await signIn(formData);
-    // localStorage.setItem('user', JSON.stringify(res.data));
     navigate('/catalog');
   }
 
