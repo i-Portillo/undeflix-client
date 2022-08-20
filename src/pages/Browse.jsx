@@ -20,7 +20,7 @@ const Browse = ({ category }) => {
     query = params.query;
   }
 
-  const [mediaData, setMediaData] = useState([]);
+  const [mediaData, setMediaData] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [mode, setMode] = useState('All');
 
