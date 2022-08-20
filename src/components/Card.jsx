@@ -333,11 +333,31 @@ export default function Card(props) {
                   </IconButton>
                 </Box>
               </Box>
-              <Box>
+              <Box >
                 <Typography variant='h6' color='primary' >Synopsis</Typography>
-                <Typography color='primary' variant='body2' >
-                {details ? `${details.overview}` : '' }
-                </Typography>
+                <Box sx={{ height: '100px', overflowY: 'auto', scrollbarWidth: 'thin', mb: 2 }} >
+                  <Typography color='primary' variant='body2' sx={{ textOverflow: 'ellipsis'}} >
+                  {details ? `${details.overview}` : '' }
+                  </Typography>
+                </Box>
+                <Typography variant='h6' color='primary' >Director</Typography>
+                <Box sx={{ mb: 2 }} >
+                  <Typography color='primary' variant='body2'>
+                    {details ? `${details.director.join(', ')}` : '' }
+                  </Typography>
+                </Box>
+                <Typography variant='h6' color='primary' >Cast</Typography>
+                <Box sx={{ mb: 2 }} >
+                  <Typography color='primary' variant='body2'>
+                    {details ? `${details.cast.join(', ')}` : '' }
+                  </Typography>
+                </Box>
+                <Typography variant='h6' color='primary' >Production</Typography>
+                <Box sx={{ mb: 2 }} >
+                  <Typography color='primary' variant='body2'>
+                    {details ? `${details.production}` : '' }
+                  </Typography>
+                </Box>
               </Box>
             </Box>
           </Box>
