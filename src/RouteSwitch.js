@@ -9,12 +9,16 @@ import Profile from './pages/Profile';
 import Dashboard from './pages/Dashboard';
 import NotFound from './pages/NotFound';
 import Watch from './pages/Watch';
+import Idle from './pages/Idle';
+import Blocked from './pages/Blocked';
 
 const RouteSwitch = () => {
   return (
     <BrowserRouter>
       <Routes>
         <Route path='/' exact element={<Auth />} />
+        <Route path='/idle' element={<Idle />} />
+        <Route path='/blocked' element={<Blocked />} />
         <Route path='/catalog/movies' element={
           <PrivateRoute role='user' >
               <Navbar />

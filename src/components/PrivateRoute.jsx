@@ -7,13 +7,15 @@ const PrivateRoute = ({ role, children }) => {
 
   const [letIn, setLetIn] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [status, setStatus] = useState(null);
 
   useEffect( () => {
     const isLoggedIn = async () => {
       try {
         const res = await checkAuth();
         if (res.status === 200) {
-          if (role === 'user' || res.data.user.role === 'admin' || res.data.user.role === role)
+          setStatus(res.data.user.subscription_status);
+          if ((role === 'user' ) || res.data.user.role === 'admin' || res.data.user.role === role)
           setLetIn(true);
         }
         setLoading(false);
@@ -30,7 +32,13 @@ const PrivateRoute = ({ role, children }) => {
         <></>
       ) : (
         letIn ? (
-          children
+          (status === 'Active') ?
+            children
+          :
+            (status === 'Idle') ?
+              <Navigate to='/idle' />
+            :
+              <Navigate to='/blocked' />
         ) : (
           <Navigate to="/" />
         )
