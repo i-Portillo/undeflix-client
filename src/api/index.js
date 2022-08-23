@@ -72,6 +72,8 @@ export const getUserKeepWatching = () => API.get('/data/user/keepwatching');
 
 export const getUserGenreAffinity = () => API.get('/data/user/genres');
 
+export const getUserBankDetails = () => API.get('/data/user/bank');
+
 export const getUsers = () => API.get('/data/users');
 
 export const getGenres = () => API.get('/data/genres');
