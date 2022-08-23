@@ -5,7 +5,7 @@ import { useEffect, useRef } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { getMediaSrc, putViewLog } from '../api';
 
-import '../styles/Watch.scss';
+// import '../styles/Watch.scss';
 
 export default function Watch() {
 

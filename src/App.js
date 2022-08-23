@@ -5,7 +5,7 @@ import { ThemeProvider } from '@mui/material/styles';
 import { theme } from './theme.js';
 import { CssBaseline } from '@mui/material';
 
-import './styles/App.scss';
+// import './styles/App.scss';
 
 function App() {
 
