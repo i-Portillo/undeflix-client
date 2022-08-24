@@ -7,6 +7,7 @@ import { getUser } from '../api/index';
 import AccountDetails from '../components/AccountDetails';
 import UserReviews from '../components/UserReviews';
 import UserViewLogs from '../components/UserViewLogs';
+import UserPlanInfo from '../components/UserPlanInfo';
 
 export default function Profile() {
 
@@ -27,8 +28,8 @@ export default function Profile() {
     switch(selectedMenu) {
       case 'accountDetails':
         return <AccountDetails userData={data} onDataChange={handleDataChange} />;
-      // case 'planInfo':
-      //   return <Typography>Plan Info</Typography>
+      case 'planInfo':
+        return <UserPlanInfo userData={{ subscriptionStatus: data.subscription_status, bankDetails: data.bank_details, lastPayment: data.last_payment }}/>
       case 'reviews':
         return <UserReviews userData={{ genres: data.genre_affinity, reviews: data.media_reviews }} />;
       case 'viewLog':
@@ -44,7 +45,7 @@ export default function Profile() {
   
   const options = [
     { text: 'Account details', onClick: () => setSelectedMenu('accountDetails') },
-    // { text: 'Plan info', onClick: () => setSelectedMenu('planInfo') },  // TODO: Expand with facturation module
+    { text: 'Plan info', onClick: () => setSelectedMenu('planInfo') },  // TODO: Expand with facturation module
     { text: 'Reviews', onClick: () => setSelectedMenu('reviews') },
     { text: 'View Log', onClick: () => setSelectedMenu('viewLog') },
   ];

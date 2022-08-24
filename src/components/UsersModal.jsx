@@ -102,6 +102,7 @@ export default function UsersModal(props) {
             }
             <DataField name='subscription_status' type='select' selectValues={['Active', 'Idle', 'Blocked']} label='Subscription' value={formData ? formData.subscription_status : '' } isEditing={isEditing} onChange={handleOnChange} />
             <DataField name='bank_details' label='Bank Details' type='text' value={formData ? formData.bank_details : '' } isEditing={isEditing} onChange={handleOnChange} />
+            <DataField name='last_payment' label='Last Payment' type='text' value={formData ? formData.last_payment : '' } isEditing={false} />
             <DataField name='name' label='Name' type='text' value={formData ? formData.name : '' } isEditing={isEditing} onChange={handleOnChange} />
             <DataField name='family_name' label='Family name' type='text' value={formData ? formData.family_name : '' } isEditing={isEditing} onChange={handleOnChange} />
             <DataField name='state' label='State' type='text' value={formData ? formData.state : '' } isEditing={isEditing} onChange={handleOnChange} />

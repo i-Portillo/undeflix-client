@@ -45,7 +45,6 @@ export default function AccountDetails({ userData, onDataChange }) {
       <Grid container spacing={1}>
 
         <DataField name='email' label='Email' type='text' value={formData ? formData.email : '' } />
-        <DataField name='bank_details' label='Bank Details' type='text' value={formData ? formData.bank_details : '' } isEditing={isEditing} onChange={handleOnChange} />
         <DataField name='name' label='Name' type='text' value={formData ? formData.name : '' } isEditing={isEditing} onChange={handleOnChange} />
         <DataField name='family_name' label='Family name' type='text' value={formData ? formData.family_name : '' } isEditing={isEditing} onChange={handleOnChange} />
         <DataField name='state' label='State' type='text' value={formData ? formData.state : '' } isEditing={isEditing} onChange={handleOnChange} />
