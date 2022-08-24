@@ -1,7 +1,7 @@
 import { Box, Button, CircularProgress, Container, Divider, Grid, Modal, Paper, TextField, Typography } from '@mui/material'
 import React, { useEffect, useState } from 'react'
 import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from 'recharts';
-import { getUserRole, getMedias as apiGetMedias, getUsers as apiGetUsers, getUserReviews } from '../api';
+import { getUserRole, getMedias as apiGetMedias, getUsers as apiGetUsers, getUserReviews, postFile } from '../api';
 import OptionList from '../components/OptionList'
 import DataTable from '../components/DataTable';
 import DataField from '../components/DataField';
@@ -9,6 +9,7 @@ import UsersModal from '../components/UsersModal';
 import UserCreateModal from '../components/UserCreateModal';
 import MediasModal from '../components/MediasModal';
 import MediaCreateModal from '../components/MediaCreateModal';
+import UploadModal from '../components/UploadModal';
 
 function StatsDashboard() {
 
@@ -97,6 +98,18 @@ function MediasDashboard() {
   const [openDetails, setOpenDetails] = useState(false);
   const [openCreate, setOpenCreate] = useState(false);
   const [modalData, setModalData] = useState(null);
+  
+  const [openAddGenre, setOpenAddGenre] = useState(false);
+  const [genreName, setGenreName] = useState('');
+
+  const [openAddPoster, setOpenAddPoster] = useState(false);
+  const [posterId, setPosterId] = useState('');
+  const [posterType, setPosterType] = useState('Movie');
+  const [posterFile, setPosterFile] = useState();
+
+  const [openAddSource, setOpenAddSource] = useState(false);
+  const [sourceId, setSourceId] = useState('');
+  const [sourceFile, setSourceFile] = useState();
 
   const headers = [
     { id: 'title', label: 'Title' },
@@ -130,6 +143,47 @@ function MediasDashboard() {
     refreshData();
   }
 
+  const handleUploadGenre = async () => {
+    console.log(genreName);
+    // TODO: create postGenre request
+  }
+
+  const handleUploadPoster = async () => {
+    console.log(posterId, posterType, posterFile);
+    const posterData = new FormData();
+    posterData.append('file', posterFile);
+    posterData.append('fileName', `${posterId}.jpg`);
+    posterData.append('path', `/images/${posterType.toLowerCase()}_posters/`);
+    // const posterData = { 
+    //   path: `/images/${posterType.toLowerCase()}/`,
+    //   filename: `${posterId}.jpg`,
+    //   file: posterFile
+    // }
+    await postFile(posterData)
+  }
+  
+  const handleUploadSource = async () => {
+    console.log(sourceId, sourceFile);
+  }
+
+  const handleAddGenreClose = () => {
+    setOpenAddGenre(false);
+    setGenreName('');
+  }
+
+  const handleAddPosterClose = () => {
+    setOpenAddPoster(false);
+    setPosterId('');
+    setPosterType('Movie');
+    setPosterFile();
+  }
+
+  const handleAddSourceClose = () => {
+    setOpenAddSource(false);
+    setSourceId('');
+    setSourceFile();
+  }
+
   useEffect( () => {
     const getMedias = async () => {
       const res = await apiGetMedias();
@@ -143,6 +197,13 @@ function MediasDashboard() {
   return (
     <>
       <DataTable title='Medias' headers={headers} data={mediaData} createClick={handleCreateClick} rowClick={handleRowClick} role={'admin'} />
+
+      <Box sx={{ marginTop: 2 }}>
+        <Button color='secondary' variant='contained' sx={{ width: '128px', mr: 2 }} onClick={() => setOpenAddGenre(true)} >Add genre</Button>
+        <Button color='secondary' variant='contained' sx={{ width: '128px', mr: 2 }} onClick={() => setOpenAddPoster(true)} >Add poster</Button>
+        <Button color='secondary' variant='contained' sx={{ width: '128px', }} onClick={() => setOpenAddSource(true)} >Add source</Button>
+      </Box>
+
       <Modal open={openDetails} onClose={handleDetailsClose} >
         <Box>
           <MediasModal data={modalData} onClose={handleDetailsClose} />
@@ -151,6 +212,34 @@ function MediasDashboard() {
       <Modal open={openCreate} onClose={handleCreateClose} >
         <Box>
           <MediaCreateModal onClose={handleCreateClose} />
+        </Box>
+      </Modal>
+      <Modal open={openAddGenre} onClose={handleAddGenreClose} >
+        <Box>
+          <UploadModal type='Genre' onUpload={handleUploadGenre} onClose={handleAddGenreClose} >
+            <DataField type='text' label='Genre name' isEditing={true} onChange={(event) => setGenreName(event.target.value)} />
+          </UploadModal>
+        </Box>
+      </Modal>
+      <Modal open={openAddPoster} onClose={handleAddPosterClose} >
+        <Box>
+          <UploadModal type='Poster' onUpload={handleUploadPoster} onClose={handleAddPosterClose} >
+            <DataField name='media_id' type='text' label='Id' isEditing={true} onChange={(event) => setPosterId(event.target.value)}/>
+            <DataField name='type' type='select' selectValues={['Movie', 'Show']} defaultValue='Movie' label='Type' isEditing={true} onChange={(event) => setPosterType(event.target.value)}/>
+            <DataField type='custom' label='Poster'>
+              <input type='file' onChange={(event) => setPosterFile(event.target.files[0])} />
+            </DataField>
+          </UploadModal>
+        </Box>
+      </Modal>
+      <Modal open={openAddSource} onClose={handleAddSourceClose} >
+        <Box>
+          <UploadModal type='Source' onUpload={handleUploadSource} onClose={handleAddSourceClose} >
+            <DataField name='media_id' type='text' label='Id' isEditing={true} onChange={(event) => setSourceId(event.target.value)} />
+            <DataField type='custom' label='Source'>
+              <input type='file' onChange={(event) => setSourceFile(event.target.files[0])} />
+            </DataField>
+          </UploadModal>
         </Box>
       </Modal>
     </>

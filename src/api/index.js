@@ -93,3 +93,5 @@ export const getQuery = (searchQuery) => API.get('/data/medias/search/', { param
 export const getMediaReviewsData = (mediaId) => API.get(`/data/media/${mediaId}/reviewData`);
 
 export const getListedData = (mediaId) => API.get(`/data/media/${mediaId}/listedData`);
+
+export const postFile = (formData) => API.post('/data/upload', formData);
