@@ -3,7 +3,7 @@ import React from 'react'
 import { useEffect } from 'react';
 import { useState } from 'react'
 
-export default function DataField({ name, label, type, selectValues, value, isEditing=false, onChange, children }) {
+export default function DataField({ name, label, type, selectValues, value, defaultValue, isEditing=false, onChange, children }) {
 
   const style = {
     textField : {
@@ -65,6 +65,7 @@ export default function DataField({ name, label, type, selectValues, value, isEd
           <Select 
             name={name}
             value={value}
+            defaultValue={defaultValue}
             disabled={!isEditing}
             onChange={onChange}
             sx={{ 
