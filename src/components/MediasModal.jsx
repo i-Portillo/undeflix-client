@@ -115,15 +115,6 @@ export default function MediasModal(props) {
     setFormData({ ...formData, genres: selectedGenres });
   }
 
-  const stringifyDate = (unformattedDate) => {
-    const date = new Date(unformattedDate);
-    return `${date.getDate().toLocaleString('en-US', {minimumIntegerDigits: 2, useGrouping:false})}/` + 
-    `${(date.getMonth() + 1).toLocaleString('en-US', {minimumIntegerDigits: 2, useGrouping:false})}/` +
-    `${date.getFullYear()} ` +
-    `${date.getHours().toLocaleString('en-US', {minimumIntegerDigits: 2, useGrouping:false})}:` +
-    `${date.getMinutes().toLocaleString('en-US', {minimumIntegerDigits: 2, useGrouping:false})}`;
-  }
-
   const handleDateChange = (date, fieldName) => {
     setFormData({ ...formData, [fieldName]: date })
   }
