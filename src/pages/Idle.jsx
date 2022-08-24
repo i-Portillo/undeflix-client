@@ -45,11 +45,11 @@ export default function Idle() {
       </Box>
       <Box display='flex' >
         <TextField value={bankDetails} sx={{ mr: 2 }} onChange={handleChange} />
-        <Button color='secondary' variant='outlined' onClick={handleRenew} >Renew</Button>
+        <Button color='secondary' variant='contained' onClick={handleRenew} >Renew</Button>
       </Box>
       <Divider sx={{ mb: 4, mt: 4 }} />
       <Box >
-        <Button color='secondary' variant='outlined' onClick={handleLogOut} >Go back to login</Button>
+        <Button color='secondary' variant='contained' onClick={handleLogOut} >Go back to login</Button>
       </Box>
     </Paper>
   )

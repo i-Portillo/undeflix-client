@@ -25,7 +25,7 @@ export default function Blocked() {
       </Box>
       <Divider sx={{ mb: 4, mt: 4 }} />
       <Box >
-        <Button color='secondary' onClick={handleLogOut} >Go back to login</Button>
+        <Button color='secondary' variant='contained' onClick={handleLogOut} >Go back to login</Button>
       </Box>
     </Paper>
   )
