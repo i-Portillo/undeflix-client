@@ -78,6 +78,8 @@ export const getUsers = () => API.get('/data/users');
 
 export const getGenres = () => API.get('/data/genres');
 
+export const postGenre = (genre) => API.post('/data/genre', { genre: genre } );
+
 export const getUserFeedback = (media) => API.get('/data/media/review', { params: { media }});
 
 export const putFeedback = (media, feedback) => API.put('/data/media/review', { media, feedback });

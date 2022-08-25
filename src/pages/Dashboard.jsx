@@ -1,7 +1,7 @@
 import { Box, Button, CircularProgress, Container, Divider, Grid, Modal, Paper, TextField, Typography } from '@mui/material'
 import React, { useEffect, useState } from 'react'
 import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from 'recharts';
-import { getUserRole, getMedias as apiGetMedias, getUsers as apiGetUsers, getUserReviews, postFile } from '../api';
+import { getUserRole, getMedias as apiGetMedias, getUsers as apiGetUsers, getUserReviews, postFile, postGenre } from '../api';
 import OptionList from '../components/OptionList'
 import DataTable from '../components/DataTable';
 import DataField from '../components/DataField';
@@ -144,26 +144,26 @@ function MediasDashboard() {
   }
 
   const handleUploadGenre = async () => {
-    console.log(genreName);
-    // TODO: create postGenre request
+    postGenre(genreName);
+    handleAddGenreClose();
   }
 
   const handleUploadPoster = async () => {
-    console.log(posterId, posterType, posterFile);
     const posterData = new FormData();
     posterData.append('file', posterFile);
     posterData.append('fileName', `${posterId}.jpg`);
     posterData.append('path', `/images/${posterType.toLowerCase()}_posters/`);
-    // const posterData = { 
-    //   path: `/images/${posterType.toLowerCase()}/`,
-    //   filename: `${posterId}.jpg`,
-    //   file: posterFile
-    // }
-    await postFile(posterData)
+    await postFile(posterData);
+    handleAddPosterClose();
   }
   
   const handleUploadSource = async () => {
-    console.log(sourceId, sourceFile);
+    const sourceData = new FormData();
+    sourceData.append('file', sourceFile);
+    sourceData.append('fileName', `${sourceId}.mp4`);
+    sourceData.append('path', `/media/`);
+    await postFile(sourceData);
+    handleAddSourceClose();
   }
 
   const handleAddGenreClose = () => {
