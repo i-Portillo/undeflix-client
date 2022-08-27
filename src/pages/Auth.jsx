@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import { Paper, Typography, Button, Container, TextField, Grid } from '@mui/material';
+import { Paper, Typography, Button, Container, TextField, Grid, Box } from '@mui/material';
 
 import { checkAuth, postUser, signIn, signUp } from '../api/index.js';
 
@@ -67,7 +67,7 @@ const Auth = () => {
   const style = {
     paper: {
       padding: 2,
-      marginTop: 10,
+      marginTop: 11,
     },
     title: {
       color: 'secondary.main',
@@ -97,7 +97,7 @@ const Auth = () => {
   }, [])
 
   return (
-
+    <>
     <Container component="main" maxWidth="sm">
       <Paper elevation={3} sx={style.paper}>
         <Typography variant='h3' sx={style.title}>{isSignup ? 'Sign Up' : 'Sign In'}</Typography>
@@ -155,7 +155,8 @@ const Auth = () => {
         </form>
       </Paper>
     </Container>
-
+    <Box component="img" src={'/images/unedflix-logo.png'} maxWidth='400px' minWidth='400px' sx={{ position: 'absolute', top: 10 , left: 10}}/>
+    </>
   )
 }
 

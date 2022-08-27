@@ -14,7 +14,7 @@ export default function Blocked() {
   }
 
   return (
-    <Paper sx={{ maxWidth: 'sm', p: 4, m: 'auto', mt: 10, backgroundColor: 'primary.main', height: '100%', maxHeight: '750px'}} >
+    <Paper sx={{ maxWidth: 'sm', p: 4, m: 'auto', mt: 11, backgroundColor: 'primary.main', height: '100%', maxHeight: '750px'}} >
       <Box mb={2} >
         <Typography color='secondary.dark' variant='h4' mb={4} >
           Welcome,
