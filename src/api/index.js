@@ -97,3 +97,13 @@ export const getMediaReviewsData = (mediaId) => API.get(`/data/media/${mediaId}/
 export const getListedData = (mediaId) => API.get(`/data/media/${mediaId}/listedData`);
 
 export const postFile = (formData) => API.post('/data/upload', formData);
+
+// export const dumpDatabase = () => API.get('/data/db/backup');
+
+export const dumpDatabase = () => API({
+  method: 'GET',
+  url: '/data/db/backup',
+  responseType: 'blob',
+})
+
+export const restoreDatabase = (formData) => API.post('/data/db/restore', formData);

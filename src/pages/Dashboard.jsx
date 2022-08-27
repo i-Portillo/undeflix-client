@@ -1,7 +1,7 @@
 import { Box, Button, CircularProgress, Container, Divider, Grid, Modal, Paper, TextField, Typography } from '@mui/material'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react';
 import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from 'recharts';
-import { getUserRole, getMedias as apiGetMedias, getUsers as apiGetUsers, getUserReviews, postFile, postGenre } from '../api';
+import { getUserRole, getMedias as apiGetMedias, getUsers as apiGetUsers, getUserReviews, postFile, postGenre, dumpDatabase, restoreDatabase } from '../api';
 import OptionList from '../components/OptionList'
 import DataTable from '../components/DataTable';
 import DataField from '../components/DataField';
@@ -248,8 +248,55 @@ function MediasDashboard() {
 
 function SystemDashboard() {
 
+  const [openRestore, setOpenRestore] = useState(false);
+  const [databaseFile, setDatabaseFile] = useState();
+
+  const handleBackup = async () => {
+    const res = await dumpDatabase();
+    const date = new Date();
+    const url = window.URL.createObjectURL(new Blob([res.data]));
+    const link = document.createElement('a');
+    link.href = url;
+    link.setAttribute('download', `unedflix_dump_${date.toISOString()}`);
+    document.body.appendChild(link);
+    link.click();
+  }
+
+  const handleRestore = async () => {
+    const date = new Date();
+    const restoreData = new FormData();
+    restoreData.append('file', databaseFile);
+    restoreData.append('fileName', `unedflix_restore_${date.toISOString()}`);
+    restoreData.append('path', `/`);
+    await restoreDatabase(restoreData);
+    handleRestoreClose();
+  }
+
+  const handleRestoreClose = () => {
+    setDatabaseFile();
+    setOpenRestore(false);
+  }
+
   return (
-    <Typography>System</Typography>
+    <>
+      <Typography variant='h4' color='secondary.dark' >System</Typography>
+      <Box mt={2} >
+        <Typography variant='h6' color='secondary.dark' >Database</Typography>
+        <Box mt={2} >
+          <Button variant='contained' color='secondary' sx={{ mr: 2 }} onClick={handleBackup} >Back up database</Button>
+          <Button variant='contained' color='secondary' onClick={() => setOpenRestore(true)} >Restore database</Button>
+        </Box>
+      </Box>
+      <Modal open={openRestore} onClose={handleRestoreClose} >
+        <Box>
+          <UploadModal type={'Database'} onUpload={handleRestore} onClose={handleRestoreClose} >
+            <DataField type='custom' label='Backup file'>
+              <input type='file' onChange={(event) => setDatabaseFile(event.target.files[0])} />
+            </DataField>
+          </UploadModal>
+        </Box>
+      </Modal>
+    </>
   );
 }
 
