@@ -1,7 +1,7 @@
 import { Box, Button, CircularProgress, Container, Divider, Grid, Modal, Paper, TextField, Typography } from '@mui/material'
 import React, { useEffect, useState } from 'react';
 import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from 'recharts';
-import { getUserRole, getMedias as apiGetMedias, getUsers as apiGetUsers, getUserReviews, postFile, postGenre, dumpDatabase, restoreDatabase } from '../api';
+import { getUserRole, getMedias as apiGetMedias, getUsers as apiGetUsers, getUserReviews, postFile, postGenre, dumpDatabase, restoreDatabase, getMostLiked, getMostDisliked, getMostListed } from '../api';
 import OptionList from '../components/OptionList'
 import DataTable from '../components/DataTable';
 import DataField from '../components/DataField';
@@ -13,8 +13,101 @@ import UploadModal from '../components/UploadModal';
 
 function StatsDashboard() {
 
+  const [mostLiked, setMostLiked] = useState(null);
+  const [mostDisliked, setMostDisliked] = useState(null);
+  const [mostListed, setMostListed] = useState(null);
+
+  const handleMostLiked = async () => {
+    const res = await getMostLiked();
+    setMostLiked(res.data);
+  }
+
+  const handleMostDisliked = async () => {
+    const res = await getMostDisliked();
+    setMostDisliked(res.data);
+  }
+
+  const handleMostListed = async () => {
+    const res = await getMostListed();
+    setMostListed(res.data);
+  }
+
   return (
-    <Typography>Stats</Typography>
+    <>
+      <Typography variant='h4' color='secondary.dark' >Stats</Typography>
+      <Box mt={2} >
+        <Box mt={2} >
+          <Grid container >
+            <DataField type='custom' label='Most liked medias'>
+              <Box sx={{ maxHeight: '150px', minHeight: '150px', overflow: 'auto', scrollbarWidth: 'thin', }} >
+                { mostLiked === null ?
+                  <Button variant='contained' color='secondary' sx={{ mr: 2 }} onClick={handleMostLiked} >Get most liked</Button>
+                  :
+                  <>
+                    {
+                      mostLiked.map(media => {
+                        return (
+                          <Box key={media.media._id} display='flex' justifyContent={'space-between'} pr={2} sx={{ overflow: 'auto' }} >
+                            <Typography variant='body'>{media.media.title}</Typography>
+                            <Typography variant='body'>{media.count}</Typography>
+                          </Box>
+                        )
+                      })
+                    }
+                  </>
+                }
+              </Box>
+            </DataField>
+
+            <Divider sx={{ width: '100%', mt: 2, mb: 2 }} />
+
+            <DataField type='custom' label='Most disliked medias'>
+              <Box sx={{ maxHeight: '150px', minHeight: '150px', overflow: 'auto', scrollbarWidth: 'thin', }} >
+                { mostDisliked === null ?
+                  <Button variant='contained' color='secondary' sx={{ mr: 2 }} onClick={handleMostDisliked} >Get most disliked</Button>
+                  :
+                  <>
+                    {
+                      mostDisliked.map(media => {
+                        return (
+                          <Box key={media.media._id} display='flex' justifyContent={'space-between'} pr={2} sx={{ overflow: 'auto' }} >
+                            <Typography variant='body'>{media.media.title}</Typography>
+                            <Typography variant='body'>{media.count}</Typography>
+                          </Box>
+                        )
+                      })
+                    }
+                  </>
+                }
+              </Box>
+            </DataField>
+
+            <Divider sx={{ width: '100%', mt: 2, mb: 2 }} />
+
+            <DataField type='custom' label='Most listed medias'>
+              <Box sx={{ maxHeight: '150px', minHeight: '150px', overflow: 'auto', scrollbarWidth: 'thin', }} >
+                { mostListed === null ?
+                  <Button variant='contained' color='secondary' sx={{ mr: 2 }} onClick={handleMostListed} >Get most listed</Button>
+                  :
+                  <>
+                    {
+                      mostListed.map(media => {
+                        return (
+                          <Box key={media.media._id} display='flex' justifyContent={'space-between'} pr={2} sx={{ overflow: 'auto' }} >
+                            <Typography variant='body'>{media.media.title}</Typography>
+                            <Typography variant='body'>{media.count}</Typography>
+                          </Box>
+                        )
+                      })
+                    }
+                  </>
+                }
+              </Box>
+            </DataField>
+          </Grid>
+        </Box>
+      </Box>
+    </>
   );
 }
 
@@ -343,6 +436,7 @@ export default function Dashboard() {
     }
 
     fecthUserRole();
+    displayStats();
   }, []);
 
   const renderContent = (content) => {

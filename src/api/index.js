@@ -107,3 +107,9 @@ export const dumpDatabase = () => API({
 })
 
 export const restoreDatabase = (formData) => API.post('/data/db/restore', formData);
+
+export const getMostLiked = () => API.get('/data/mediaReview/mostliked');
+
+export const getMostDisliked = () => API.get('/data/mediaReview/mostdisliked');
+
+export const getMostListed = () => API.get('/data/media/mostListed');
