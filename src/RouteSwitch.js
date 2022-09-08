@@ -17,8 +17,16 @@ const RouteSwitch = () => {
     <BrowserRouter>
       <Routes>
         <Route path='/' exact element={<Auth />} />
-        <Route path='/idle' element={<Idle />} />
-        <Route path='/blocked' element={<Blocked />} />
+        <Route path='/idle' element={
+            <PrivateRoute role='user'>
+              <Idle />
+            </PrivateRoute>
+          } />
+        <Route path='/blocked' element={
+            <PrivateRoute role='user'>
+              <Blocked />
+            </PrivateRoute>
+          } />
         <Route path='/catalog/movies' element={
           <PrivateRoute role='user' >
               <Navbar />
