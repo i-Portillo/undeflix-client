@@ -24,15 +24,15 @@ export const signOut = () => {
 export const checkAuth = () => {
   return API({
     method: 'GET',
-    url: "/private"
+    url: "/auth/private"
   })
 }
 
 export const getMedias = () => API.get('/data/medias');
 
-export const getMediasByGenre = (genre) => API.get(`/medias/genre/${genre}`);
+export const getMediasByGenre = (genre) => API.get(`/data/medias/genre/${genre}`);
 
-export const getMediaDetails = (mediaId) => API.get(`/media/${mediaId}`);
+export const getMediaDetails = (mediaId) => API.get(`/data/media/${mediaId}`);
 
 export const getMediaSrc = (mediaSrcId) => API.get(`/data/mediaSrc/${mediaSrcId}`);
 
