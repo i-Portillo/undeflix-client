@@ -15,7 +15,11 @@ export default function UserViewLogs({ userData }) {
               :
                 <List p={0} >
                   {
-                    userData.viewLogs.map (viewLog => {
+                    userData.viewLogs.sort( (a,b) => {
+                      if (a.date <= b.date) return 1;
+                      return -1
+                    })
+                    .map (viewLog => {
                       const date = new Date(viewLog.date);
                       const formattedDate = `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()} ${date.getHours().toLocaleString('en-US', {minimumIntegerDigits: 2, useGrouping:false})}:${date.getMinutes().toLocaleString('en-US', {minimumIntegerDigits: 2, useGrouping:false})}`;
                       return (
