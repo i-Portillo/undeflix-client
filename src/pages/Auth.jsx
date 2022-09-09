@@ -142,7 +142,7 @@ const Auth = () => {
               </>
             }
           </Grid>
-          <Button type="submit" fullWidth variant="contained" sx={style.submit}>
+          <Button type="submit" color='secondary' fullWidth variant="contained" sx={style.submit}>
             { isSignup ? 'Sign Up' : 'Sign In' }
           </Button>
           <Grid container justifyContent="flex-end">
