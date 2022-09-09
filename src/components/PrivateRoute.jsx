@@ -1,9 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import { Navigate } from 'react-router-dom';
+import { Navigate, useLocation } from 'react-router-dom';
 
 import { checkAuth } from '../api/index.js';
+import Blocked from '../pages/Blocked.jsx';
+import Idle from '../pages/Idle.jsx';
 
 const PrivateRoute = ({ role, children }) => {
+
+  const location = useLocation();
 
   const [letIn, setLetIn] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -33,12 +37,21 @@ const PrivateRoute = ({ role, children }) => {
       ) : (
         letIn ? (
           (status === 'Active') ?
-            children
+            (location.pathname === '/idle' || location.pathname === '/blocked') ?
+              <Navigate to='/catalog' />
+            :
+              children
           :
             (status === 'Idle') ?
-              <Navigate to='/idle' />
+              (location.pathname !== '/idle') ?
+                <Navigate to='/idle' />
+              :
+                <Idle />
             :
-              <Navigate to='/blocked' />
+              (location.pathname !== '/blocked') ?
+                <Navigate to='/blocked' />
+              :
+                <Blocked />
         ) : (
           <Navigate to="/" />
         )
