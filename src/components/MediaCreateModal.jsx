@@ -127,7 +127,7 @@ export default function MediaCreateModal(props) {
     }}
     >
       <Typography variant='h4' >
-        Create User
+        Create Media
       </Typography>
       <form>
         <Box >
