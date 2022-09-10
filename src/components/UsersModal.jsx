@@ -44,6 +44,16 @@ export default function UsersModal(props) {
     await putUserData(data._id, formData);
   }
 
+  const formattedDate = (date) => {
+    const d = new Date(date);
+
+    return (
+      `${d.getDate().toLocaleString('en-US', {minimumIntegerDigits: 2, useGrouping:false})}/` +
+      `${(d.getMonth() + 1).toLocaleString('en-US', {minimumIntegerDigits: 2, useGrouping:false})}/` +
+      `${d.getFullYear().toLocaleString('en-US', {minimumIntegerDigits: 2, useGrouping:false})}`
+    )
+  }
+
   useEffect( () => {
     const getReviews = async () => {
       const res = await getUserReviews(data._id);
@@ -102,7 +112,7 @@ export default function UsersModal(props) {
             }
             <DataField name='subscription_status' type='select' selectValues={['Active', 'Idle', 'Blocked']} label='Subscription' value={formData ? formData.subscription_status : '' } isEditing={isEditing} onChange={handleOnChange} />
             <DataField name='bank_details' label='Bank Details' type='text' value={formData ? formData.bank_details : '' } isEditing={isEditing} onChange={handleOnChange} />
-            <DataField name='last_payment' label='Last Payment' type='text' value={formData ? formData.last_payment : '' } isEditing={false} />
+            <DataField name='last_payment' label='Last Payment' type='text' value={formData ? formattedDate(formData.last_payment) : '' } isEditing={false} />
             <DataField name='name' label='Name' type='text' value={formData ? formData.name : '' } isEditing={isEditing} onChange={handleOnChange} />
             <DataField name='family_name' label='Family name' type='text' value={formData ? formData.family_name : '' } isEditing={isEditing} onChange={handleOnChange} />
             <DataField name='state' label='State' type='text' value={formData ? formData.state : '' } isEditing={isEditing} onChange={handleOnChange} />
