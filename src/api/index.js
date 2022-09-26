@@ -80,25 +80,23 @@ export const getGenres = () => API.get('/data/genres');
 
 export const postGenre = (genre) => API.post('/data/genre', { genre: genre } );
 
-export const getUserFeedback = (media) => API.get('/data/media/review', { params: { media }});
+export const getUserFeedback = (media) => API.get('/data/review', { params: { media }});
 
-export const putFeedback = (media, feedback) => API.put('/data/media/review', { media, feedback });
+export const putFeedback = (media, feedback) => API.put('/data/review', { media, feedback });
 
-export const deleteFeedback = (media) => API.delete('/data/media/review', { params: { media }});
+export const deleteFeedback = (media) => API.delete('/data/review', { params: { media }});
 
 export const getViewLog = (mediaSrc) => API.get('/data/viewLog', { params: { mediaSrc }});
 
 export const putViewLog = (mediaSrc, progress) => API.put('/data/viewlog', { mediaSrc, progress });
 
-export const getQuery = (searchQuery) => API.get('/data/medias/search/', { params: { searchQuery }});
+export const getQuery = (searchQuery) => API.get(`/data/medias/search/${searchQuery}`);
 
 export const getMediaReviewsData = (mediaId) => API.get(`/data/media/${mediaId}/reviewData`);
 
 export const getListedData = (mediaId) => API.get(`/data/media/${mediaId}/listedData`);
 
 export const postFile = (formData) => API.post('/data/upload', formData);
-
-// export const dumpDatabase = () => API.get('/data/db/backup');
 
 export const dumpDatabase = () => API({
   method: 'GET',
@@ -108,8 +106,8 @@ export const dumpDatabase = () => API({
 
 export const restoreDatabase = (formData) => API.post('/data/db/restore', formData);
 
-export const getMostLiked = () => API.get('/data/mediaReview/mostliked');
+export const getMostLiked = () => API.get('/data/review/mostliked');
 
-export const getMostDisliked = () => API.get('/data/mediaReview/mostdisliked');
+export const getMostDisliked = () => API.get('/data/review/mostdisliked');
 
 export const getMostListed = () => API.get('/data/media/mostListed');
