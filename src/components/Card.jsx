@@ -334,6 +334,24 @@ export default function Card(props) {
                 </Box>
               </Box>
               <Box >
+                {
+                  (mediaData.type === 'Movie') ?
+                    <>
+                      <Box display='flex' sx={{ alignItems: 'flex-end' }}>
+                        <Typography variant='h6' color='primary' >Duration</Typography>
+                        <Typography color='primary' variant='h6' sx={{ ml: 2, fontWeight: 400 }}>
+                        {details ? `${details.runtime} min.` : '' }
+                        </Typography>
+                      </Box>
+                    </>
+                  :
+                    <Box display='flex' sx={{ alignItems: 'center' }}>
+                      <Typography variant='h6' color='primary' >Number of episodes</Typography>
+                      <Typography color='primary' variant='h6' sx={{ ml: 2, fontWeight: 400  }}>
+                      {details ? `${details.number_of_episodes}` : '' }
+                      </Typography>
+                    </Box>
+                }
                 <Typography variant='h6' color='primary' >Synopsis</Typography>
                 <Box sx={{ height: '100px', overflowY: 'auto', scrollbarWidth: 'thin', mb: 2 }} >
                   <Typography color='primary' variant='body2' sx={{ textOverflow: 'ellipsis'}} >

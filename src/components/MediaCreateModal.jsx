@@ -160,7 +160,10 @@ export default function MediaCreateModal(props) {
 
             {
               (formData.type === 'Movie') ?
-                <DataField name='media_src' type='text' label='Source' value={formData ? formData.media_src[0][0].src : ''} isEditing={true} onChange={(event) => handleSrcChange(event, 0, 0)} />
+                <>
+                  <DataField name='media_src' type='text' label='Source' value={formData ? formData.media_src[0][0].src : ''} isEditing={true} onChange={(event) => handleSrcChange(event, 0, 0)} />
+                  <DataField name='runtime' type='number' label='Duration' value={formData ? formData.runtime : ''} isEditing={true} onChange={handleOnChange} />
+                </>
               :
                 <DataField name='media_src' type='custom' label='Episodes'>
                   <Box display='flex' >
