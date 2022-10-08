@@ -60,6 +60,19 @@ export default function DataField({ name, label, type, selectValues, value, defa
             onChange={onChange}
           />
         )
+      case 'number':
+        return (
+          <TextField
+            name={name}
+            value={value}
+            type='number'
+            disabled= {!isEditing}
+            sx={ style.textField }
+            InputProps={{ disableUnderline: (!isEditing), autoComplete: 'new-password' }}
+            variant='standard'
+            onChange={onChange}
+          />
+        )
       case 'select':
         return (
           <Select 
