@@ -1,9 +1,10 @@
-import { Button, Divider, Grid, TextField } from '@mui/material'
+import { Button, Divider, Grid } from '@mui/material'
 import { Box } from '@mui/system';
 import React, { useState } from 'react'
 import { putUserData, putUserPassword } from '../api';
 
 import DataField from './DataField'
+import Notification from './Notification';
 
 export default function AccountDetails({ userData, onDataChange }) {
 
@@ -11,6 +12,9 @@ export default function AccountDetails({ userData, onDataChange }) {
   const [formData, setFormData] = useState(userData);
   const [originalData, setOriginalData] = useState(userData);
   const [password, setPassword] = useState({ password: '', confirm: '' });
+  const [openSb, setOpenSb] = useState(false);
+  const [sbMsg, setSbMsg] = useState('');
+  const [sbSeverity, setSbSeverity] = useState('success');
 
   const handleOnChange = (event) => {
     setFormData({ ...formData, [event.target.name]: event.target.value });
@@ -22,9 +26,15 @@ export default function AccountDetails({ userData, onDataChange }) {
   }
 
   const handleSubmit = async () => {
-    await putUserData(null, formData);
-    onDataChange();
-    setIsEditing(false);
+    const res = await putUserData(null, formData);
+    if (res.status === 200) {
+
+      setOpenSb(true);
+      onDataChange();
+      setIsEditing(false);
+    } else {
+      // TODO
+    }
   }
 
   const handleCancelEdit = () => {
@@ -36,11 +46,33 @@ export default function AccountDetails({ userData, onDataChange }) {
     setPassword({...password, [event.target.name]: event.target.value});
   }
 
-  const handlePasswordSubmit = () => {
-    putUserPassword(password.password);
+  const handlePasswordSubmit = async () => {
+    if (password.password.length > 0 && password.password === password.confirm) {
+      const res = await putUserPassword(password.password);
+      if (res.status === 200) {
+        setSbMsg('The changes have been saved.')
+        setSbSeverity('error');
+        setOpenSb(true);
+      } else {
+        // TODO
+      }
+    } else {
+      setSbMsg("The passwords don't match")
+      setSbSeverity('error');
+      setOpenSb(true);
+    }
+  }
+
+  const handleCloseSb = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+
+    setOpenSb(false);
   }
 
   return (
+    <>
     <Box>      
       <Grid container spacing={1}>
 
@@ -54,14 +86,14 @@ export default function AccountDetails({ userData, onDataChange }) {
 
       </Grid>
       <Box sx={{ padding: '8px', display: 'flex', justifyContent: 'flex-end' }} >
-      {
-        (isEditing) ? 
+        {
+          (isEditing) ? 
           <>
             <Button color='secondary' variant='contained' sx={{ width: '80px', mr: 2 }} onClick={handleSubmit} >Save</Button>
             <Button color='secondary' variant='contained' sx={{ width: '80px', }} onClick={handleCancelEdit} >Cancel</Button>
           </>
         :
-          <>
+        <>
             <Button color='secondary' onClick={handleEdit} variant='contained' sx={{ width: '80px' }} type='button' >Edit</Button>
           </>
       }
@@ -72,8 +104,10 @@ export default function AccountDetails({ userData, onDataChange }) {
         <DataField name='confirm' label='Confirm' type='password' isEditing={true} onChange={handlePasswordChange} />
       </Grid>
       <Box sx={{ padding: '8px', display: 'flex', justifyContent: 'flex-end' }} >
-        <Button color='secondary' variant='contained' sx={{ width: '80px' }} onClick={handlePasswordSubmit} >Change</Button>
+        <Button color='secondary' variant='contained' sx={{ width: '80px' }} onClick={handlePasswordSubmit} disabled={ password.password.length === 0 } >Change</Button>
       </Box>
     </Box>
+    <Notification open={openSb} onClose={handleCloseSb} severity={sbSeverity} content={sbMsg} />
+    </>
   )
 }

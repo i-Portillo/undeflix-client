@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import { Paper, Typography, Button, Container, TextField, Grid, Box } from '@mui/material';
+import { Paper, Typography, Button, Container, TextField, Grid, Box, Snackbar, Alert } from '@mui/material';
 
 import { checkAuth, postUser, signIn, signUp } from '../api/index.js';
+import Notification from '../components/Notification.jsx';
 
 const initialFormData = {
   email: '',
@@ -26,13 +27,19 @@ const Auth = () => {
 
   const [isSignup, setIsSignup] = useState(false);
   const [formData, setFormData] = useState(initialFormData);
+  const [openErrorSb, setOpenErrorSb] = useState(false);
+  const [errorMsg, setErrorMsg] = useState('Could not log in, please check credentials.');
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try{
       if (!isSignup) {
-        await signIn(formData);
-        navigate('/catalog');
+        const res = await signIn(formData);
+        if (res.status === 200) {
+          navigate('/catalog');
+        } else {
+          setOpenErrorSb(true);
+        }
       } else {
         if (  // TODO: Proper validation
           formData.email !== '' &&
@@ -49,10 +56,14 @@ const Auth = () => {
           } else {
             throw new Error(res.data.message);
           }
+        } else {
+          setErrorMsg('The form is not properly filled.')
+          setOpenErrorSb(true)
         }
       }
     } catch(err) {
-      console.log(err);
+      setErrorMsg(err.response.data.message)
+      setOpenErrorSb(true);
     }
   }
 
@@ -60,8 +71,16 @@ const Auth = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   }
 
-  const switchMode = () => {
+  const switchMode = () => {    
     setIsSignup((prevIsSignup) => !prevIsSignup);
+  }
+
+  const handleCloseErrorSb = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+
+    setOpenErrorSb(false);
   }
 
   const style = {
@@ -156,6 +175,7 @@ const Auth = () => {
       </Paper>
     </Container>
     <Box component="img" src={'/images/unedflix-logo.png'} maxWidth='400px' minWidth='400px' sx={{ position: 'absolute', top: 10 , left: 10}}/>
+    <Notification open={openErrorSb} onClose={handleCloseErrorSb} severity='error' content={errorMsg} />
     </>
   )
 }
